@@ -6,6 +6,7 @@
 
 using namespace std;
 
+// Principal
 int main()
 {
 	//Janela
