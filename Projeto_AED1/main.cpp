@@ -1,50 +1,24 @@
 #include <iostream>
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/Audio.hpp>
+#include "Game.h"
 
 using namespace std;
 
 // Principal
 int main()
 {
-	//Janela
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Projeto AED1", sf::Style::Titlebar | sf::Style::Close);
-
+	//Inicializar o jogo
+	Game game;
 
 	//Game Loop
-	while (window.isOpen()) 
+	while (game.running()) 
 	{
-		sf::Event eventPlayer;
+		//Update
+		game.update();
 
-		while (window.pollEvent(eventPlayer))
-		{
-			switch (eventPlayer.type)
-			{
-			case sf::Event::Closed:
-				window.close();
-				break;
-			case sf::Event::KeyPressed:
-				if (eventPlayer.key.code == sf::Keyboard::Escape)
-					window.close();
-				break;
-			}
-		}
+		//Render
+		game.render();
+		
 	}
-
-	//Update
-
-	//Render
-
-	//Limpa o Frame antigo
-	window.clear(); 
-
-	// Desenha na tela o jogo
-
-
-	// Mostra na tela o que foi renderizado para a janela até agora
-	window.display(); 
 
 	//Fim do aplicativo
 	return 0;
