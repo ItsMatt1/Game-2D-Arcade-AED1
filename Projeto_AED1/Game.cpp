@@ -13,7 +13,7 @@ void Game::initWindow()
 	this->window = new sf::RenderWindow(this->videoMode, "Projeto AED1", sf::Style::Titlebar | sf::Style::Close);
 }
 
-void Game::initEnimies()
+void Game::initEnemies()
 {
 
 	this->enemy.setSize(sf::Vector2f(100.f, 100.f));

@@ -24,7 +24,7 @@ private:
 	//Funcões Privadas.
 	void initVariables();
 	void initWindow();
-	void initEnimies();
+	void initEnemies();
 public:
 
 	//Construtores e Destruidores 
