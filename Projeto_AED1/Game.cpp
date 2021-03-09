@@ -13,6 +13,16 @@ void Game::initWindow()
 	this->window = new sf::RenderWindow(this->videoMode, "Projeto AED1", sf::Style::Titlebar | sf::Style::Close);
 }
 
+void Game::initEnimies()
+{
+
+	this->enemy.setSize(sf::Vector2f(100.f, 100.f));
+	this->enemy.setFillColor(sf::Color::Cyan);
+	this->enemy.setOutlineThickness(1.f);
+	this->enemy.setOutlineColor(sf::Color::Red);
+
+}
+
 //Construtores e Destrutores
 Game::Game()
 {
@@ -62,7 +72,7 @@ void Game::update()
 void Game::render()
 {
 	//Limpa
-	this->window->clear(sf::Color(0,0,255,255));
+	this->window->clear();
 
 	//Desenha
 
