@@ -8,17 +8,20 @@ void Game::initVariables()
 
 void Game::initWindow()
 {
-	this->videoMode.height = 600;
 	this->videoMode.width = 800;
+	this->videoMode.height = 600;
 	this->window = new sf::RenderWindow(this->videoMode, "Projeto AED1", sf::Style::Titlebar | sf::Style::Close);
+
+	this->window->setFramerateLimit(60);
 }
 
 void Game::initEnemies()
 {
+	this->enemy.setPosition(400.f, 300.f);
 	this->enemy.setSize(sf::Vector2f(100.f, 100.f));
-	this->enemy.setFillColor(sf::Color::Cyan);
+	this->enemy.setFillColor(sf::Color::Red);
 	this->enemy.setOutlineThickness(1.f);
-	this->enemy.setOutlineColor(sf::Color::Red);
+	this->enemy.setOutlineColor(sf::Color::Cyan);
 }
 
 //Construtores e Destrutores
@@ -26,7 +29,7 @@ Game::Game()
 {
 	this->initVariables();
 	this->initWindow();
-	//this->initEnemies();
+	this->initEnemies();
 }
 
 Game::~Game()
@@ -62,9 +65,20 @@ void Game::pollEvents()
 	}
 }
 
+void Game::updateMousePositions()
+{
+}
+
 void Game::update()
 {
 	this->pollEvents();
+
+	//Atualiza a posição do mouse
+	//Relativo a tela
+	//printf("%d %d\n", sf::Mouse::getPosition().x, sf::Mouse::getPosition().y);
+
+	//Relativo a janela
+	printf("%d %d\n", sf::Mouse::getPosition(*this->window).x, sf::Mouse::getPosition(*this->window).y);
 }
 
 
