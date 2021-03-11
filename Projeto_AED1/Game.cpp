@@ -4,8 +4,18 @@
 void Game::initVariables()
 {
 	this->window = nullptr;
+
+
+	//Game logic
+
+	this->points = 0;
+	this->enemySpawnTimerMax = 1000.f;
+	this->enemySpawnTimer = this->enemySpawnTimerMax;
+
+	this->maxEnemies = 5;
 }
 
+//Configuração da janela
 void Game::initWindow()
 {
 	this->videoMode.width = 800;
@@ -15,6 +25,7 @@ void Game::initWindow()
 	this->window->setFramerateLimit(60);
 }
 
+//Configuração do inimigo
 void Game::initEnemies()
 {
 	this->enemy.setPosition(400.f, 300.f);
@@ -44,9 +55,29 @@ const bool Game::running() const
 	return this->window->isOpen();
 }
 
-
-
 //Funções
+
+void Game::spawnEnemies()
+{
+	/*
+	Nasce os inimigos e define a cor e posiçoes
+	*/
+
+	this->enemy.setPosition
+	(
+		static_cast<float>(rand() % static_cast<int>(this->window->getSize().x - this->enemy.getSize().x)),
+		(0.f)
+	);
+
+	this->enemy.setFillColor(sf::Color::Red);
+
+	//Spawn
+	this->enemies.push_back(this->enemy);
+
+	//Remove os inimigos no fim da tela
+
+
+}
 void Game::pollEvents()
 {
 	//Polling
@@ -67,18 +98,59 @@ void Game::pollEvents()
 
 void Game::updateMousePositions()
 {
+	this->mousePosWindow = sf::Mouse::getPosition(*this->window);
 }
+
+void Game::updateEnemies()
+{
+	/*
+	Atualiza o timer do nascer de inimigos e nasce inimigos
+	quando o total de inimigos é menor que o maximo
+	Move o inimigo
+	*/
+
+	//Atualizando o timer para o inimigo nascer
+
+	if (this->enemies.size() < this->maxEnemies)
+	{
+		if (this->enemySpawnTimer >= this->enemySpawnTimerMax)
+		{
+			//Nasce o inimigo e reseta o timer
+			this->spawnEnemies();
+			this->enemySpawnTimer = 0.f;
+		}
+		else
+		{
+			this->enemySpawnTimer += 1.f;
+		}
+	}
+	
+	//Move o inimigo
+	for (auto &e : this->enemies)
+	{
+		e.move(0.f, 1.f);
+	}
+
+}
+
+//Todos os updates
 
 void Game::update()
 {
 	this->pollEvents();
 
-	//Atualiza a posição do mouse
-	//Relativo a tela
-	//printf("%d %d\n", sf::Mouse::getPosition().x, sf::Mouse::getPosition().y);
+	this->updateMousePositions();
 
-	//Relativo a janela
-	printf("%d %d\n", sf::Mouse::getPosition(*this->window).x, sf::Mouse::getPosition(*this->window).y);
+	this->updateEnemies();
+}
+
+void Game::renderEnemies()
+{
+	//Renderizando o inimigo
+	for (auto& e : this->enemies)
+	{
+		this->window->draw(e);
+	}
 }
 
 
@@ -88,7 +160,8 @@ void Game::render()
 	this->window->clear();
 
 	//Desenha
-	this->window->draw(this->enemy);
+	//this->window->draw(this->enemy);
+	this->renderEnemies();
 
 	//Mostra
 	this->window->display();
