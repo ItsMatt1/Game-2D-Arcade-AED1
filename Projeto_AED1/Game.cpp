@@ -15,12 +15,10 @@ void Game::initWindow()
 
 void Game::initEnemies()
 {
-
 	this->enemy.setSize(sf::Vector2f(100.f, 100.f));
 	this->enemy.setFillColor(sf::Color::Cyan);
 	this->enemy.setOutlineThickness(1.f);
 	this->enemy.setOutlineColor(sf::Color::Red);
-
 }
 
 //Construtores e Destrutores
@@ -28,6 +26,7 @@ Game::Game()
 {
 	this->initVariables();
 	this->initWindow();
+	//this->initEnemies();
 }
 
 Game::~Game()
@@ -75,7 +74,7 @@ void Game::render()
 	this->window->clear();
 
 	//Desenha
-
+	this->window->draw(this->enemy);
 
 	//Mostra
 	this->window->display();
