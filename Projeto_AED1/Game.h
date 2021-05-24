@@ -10,6 +10,8 @@ using namespace std;
 #include <SFML/Window.hpp>
 #include <SFML/Audio.hpp>
 
+using namespace sf;
+
 /*
 	Classe empacotadora que age como a Game Engine
 */

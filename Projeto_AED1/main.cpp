@@ -3,29 +3,30 @@
 // Principal
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(800, 600), "Projeto AED1");
+	RenderWindow window(VideoMode(800, 600), "Projeto AED1", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
+	
 
 
 	//Assets
 
 	//Asteroid
-	sf::Texture t1;
-	t1.loadFromFile("Assets/Spaceship.png");
+	Texture textura1;
+	textura1.loadFromFile("Assets/Spaceship.png");
 
-	sf::Sprite Asteroid(t1);
+	Sprite nave(textura1);
 
-	Asteroid.setPosition(sf::Vector2f(384.f, 284.f));
+	nave.setPosition(Vector2f(384.f, 284.f));
 
 	
 
 	while (window.isOpen())
 	{
-		sf::Event event;
+		Event event;
 
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.type == Event::Closed)
 			{
 				window.close();
 
@@ -34,10 +35,10 @@ int main()
 
 			
 		//Limpar a janela
-		window.clear(sf::Color::Black);
+		window.clear(Color::Black);
 
 		//Desenhar
-		window.draw(Asteroid);
+		window.draw(nave);
 
 		//Terminar o Frame
 		window.display();
