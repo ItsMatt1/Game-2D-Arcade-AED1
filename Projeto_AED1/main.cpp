@@ -3,15 +3,12 @@
 // Principal
 int main()
 {
+	//Janela
+
 	RenderWindow window(VideoMode(800, 600), "Projeto AED1", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
 
 	Clock deltaClock;
-
-
-	int i = rand() / 100;
-
-	cout << i;
 
 	//Assets
 
@@ -29,20 +26,19 @@ int main()
 	ast_tex.loadFromFile("Assets/Asteroid.png");
 
 	Sprite asteroide(ast_tex);
+	asteroide.setScale(2.6f, 2.6f);
+
 
 	srand(time(0));
-	int x = ((rand() % 640) + 1);
-	int y = ((rand() % 600));
-
-	asteroide.setPosition(x, -y);
-	
-
+	asteroide.setOrigin(24.f, 24.f);
+	asteroide.setPosition(((rand() % 640) + 1), -(rand() % 600));
 
 	//Background
 	Texture bg_tex;
 	bg_tex.loadFromFile("Assets/Background.png");
 
 	Sprite bg(bg_tex);
+
 
 
 	while (window.isOpen())
@@ -58,6 +54,8 @@ int main()
 		// Movimentação do Asteroide
 
 		asteroide.move(0.f, Ast_Velocity);
+
+		asteroide.rotate(1.f);
 
 		//Movimentos
 
@@ -84,8 +82,6 @@ int main()
 
 		while (window.pollEvent(event))
 		{
-
-
 			if (event.type == Event::Closed)
 			{
 				window.close();
