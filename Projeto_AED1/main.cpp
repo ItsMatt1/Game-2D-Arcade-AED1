@@ -5,12 +5,10 @@ int main()
 {
 	RenderWindow window(VideoMode(800, 600), "Projeto AED1", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
-	
-
 
 	//Assets
 
-	//Asteroid
+	//Nave
 	Texture textura1;
 	textura1.loadFromFile("Assets/Spaceship.png");
 
@@ -18,7 +16,12 @@ int main()
 
 	nave.setPosition(Vector2f(384.f, 284.f));
 
-	
+	//Background
+	Texture textura2;
+	textura2.loadFromFile("Assets/Background.png");
+
+	Sprite bg(textura2);
+
 
 	while (window.isOpen())
 	{
@@ -31,6 +34,18 @@ int main()
 				window.close();
 
 			}
+
+			if (Keyboard::isKeyPressed(Keyboard::Left))
+			{
+				// left key is pressed: move our character
+				nave.move(-5.f, 0.f);
+			}
+
+			if (Keyboard::isKeyPressed(sf::Keyboard::Right))
+			{
+				// left key is pressed: move our character
+				nave.move(5.f, 0.f);
+			}
 		}
 
 			
@@ -38,16 +53,13 @@ int main()
 		window.clear(Color::Black);
 
 		//Desenhar
+		window.draw(bg);
 		window.draw(nave);
 
 		//Terminar o Frame
 		window.display();
 
 	}
-	//Desenhar
-
-	//window.clear();
-	//window.display();
 
 	//Fim do aplicativo
 	return 0;
