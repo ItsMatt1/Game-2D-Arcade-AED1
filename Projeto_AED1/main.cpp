@@ -7,15 +7,17 @@ int main()
 	window.setFramerateLimit(60);
 
 
+	//Assets
+
+	//Asteroid
 	sf::Texture t1;
-	t1.loadFromFile("Assets/Asteroid.png");
+	t1.loadFromFile("Assets/Spaceship.png");
 
 	sf::Sprite Asteroid(t1);
 
-	Asteroid.setPosition(sf::Vector2f(320.f, 220.f));
+	Asteroid.setPosition(sf::Vector2f(384.f, 284.f));
 
-
-	//t1.setSmooth(false);
+	
 
 	while (window.isOpen())
 	{
