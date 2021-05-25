@@ -22,6 +22,12 @@ int main()
 	nave.setPosition(Vector2f(384.f, 552.f));
 	nave.setScale(1.5f, 1.5f);
 
+	//** Tiro
+	Texture tiro_tex;
+	tiro_tex.loadFromFile("Assets/bullet.png");
+
+	Sprite tiro(tiro_tex);
+
 	//** Asteroide
 	Texture ast_tex;
 	ast_tex.loadFromFile("Assets/Asteroid.png");
@@ -74,54 +80,65 @@ int main()
 		asteroide.rotate(2.f);
 
 		//** Movimento involuntário da nave
-		if (!(Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::Up)
-			|| Keyboard::isKeyPressed(Keyboard::Down)))
+		if (!(Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::W)
+			|| Keyboard::isKeyPressed(Keyboard::S)))
 		{
 			nave.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 		}
 
 		//** Movimentos de controle da nave
-		
-		if (Keyboard::isKeyPressed(Keyboard::Left))
+		if (!Keyboard::isKeyPressed(Keyboard::Space))
+		{
+			tiro.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::Key::Space))
+		{	
+			tiro.setPosition(nave.getPosition().x + 17.f, nave.getPosition().y + -17.f);
+			tiro.setScale(2.0f, 2.0f);
+
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::A))
 		{
 			nave.move(-Ship_Velocity_Left, -50.f * dt.asSeconds());
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Right))
+		if (Keyboard::isKeyPressed(Keyboard::D))
 		{
 			nave.move(Ship_Velocity_Right, -50.f * dt.asSeconds());
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Up))
+		if (Keyboard::isKeyPressed(Keyboard::W))
 		{
 			nave.move(-50.f * dt.asSeconds(), -Ship_Velocity_Left);
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::Down))
+		if (Keyboard::isKeyPressed(Keyboard::S))
 		{
 			nave.move(-50.f * dt.asSeconds(), Ship_Velocity_Right);
 		}
 
 
-		if (Keyboard::isKeyPressed(Keyboard::Left) && Keyboard::isKeyPressed(Keyboard::Down))
+		if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::S))
 		{
 			nave.move(-Ship_Velocity_Left * 0.2, Ship_Velocity_Right * 0.2);
 			cout << Ship_Velocity_Left << endl;
 			cout << Ship_Velocity_Right << endl;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Left) && Keyboard::isKeyPressed(Keyboard::Up))
+		if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::W))
 		{
 			nave.move(-Ship_Velocity_Left * 0.2, -Ship_Velocity_Left * 0.2);
 			cout << Ship_Velocity_Left << endl;
 			cout << Ship_Velocity_Right << endl;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Right) && Keyboard::isKeyPressed(Keyboard::Down))
+		if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::S))
 		{
 			nave.move(Ship_Velocity_Right * 0.2, Ship_Velocity_Right * 0.2);
 			cout << Ship_Velocity_Left << endl;
 			cout << Ship_Velocity_Right << endl;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::Right) && Keyboard::isKeyPressed(Keyboard::Up))
+		if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::W))
 		{
 			nave.move(Ship_Velocity_Right * 0.2, -Ship_Velocity_Left * 0.2);
 			cout << Ship_Velocity_Left << endl;
@@ -160,6 +177,7 @@ int main()
 		//** Desenhar
 		window.draw(bg);
 		window.draw(nave);
+		window.draw(tiro);
 		window.draw(asteroide);
 
 		//** Terminar o Frame
