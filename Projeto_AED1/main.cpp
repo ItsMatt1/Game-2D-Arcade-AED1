@@ -8,77 +8,129 @@ int main()
 	RenderWindow window(VideoMode(800, 600), "Projeto AED1", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
 
+
 	Clock deltaClock;
 
-	//Assets
+	//** Assets
 
-	//Nave
+	//** Nave
 	Texture ship_tex;
 	ship_tex.loadFromFile("Assets/Spaceship.png");
 
 	Sprite nave(ship_tex);
 
+	//Configuraçoes da nave.
 	nave.setPosition(Vector2f(384.f, 284.f));
 	nave.setScale(1.5f, 1.5f);
 
-	//Asteroide
+	//** Asteroide
 	Texture ast_tex;
 	ast_tex.loadFromFile("Assets/Asteroid.png");
 
 	Sprite asteroide(ast_tex);
 	asteroide.setScale(2.6f, 2.6f);
 
-
+	//Posicao do asteroide.
 	srand(time(0));
 	asteroide.setOrigin(24.f, 24.f);
 	asteroide.setPosition(((rand() % 640) + 1), -(rand() % 600));
 
-	//Background
+	//** Background
 	Texture bg_tex;
 	bg_tex.loadFromFile("Assets/Background.png");
 
-	Sprite bg(bg_tex);
+	//** Visão do mapa
 
+	View View(window.getDefaultView());
+	FloatRect fBounds(0.f, 0.f, 3200.f, 2400.f);
+	IntRect	iBounds(fBounds);
+	bg_tex.setRepeated(true);
 
+	//** Sprite do Background
+	Sprite bg(bg_tex, iBounds);
 
+	//** Limites da Visão
+	const sf::Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
+	const sf::Vector2f spriteStart(fBounds.left, fBounds.top);
+
+	//** Enquanto Janela está aberta
 	while (window.isOpen())
 	{
 		Event event;
 
 		Time dt = deltaClock.restart();
 
-		float Ast_Velocity = 50.f * dt.asSeconds();
-		float Ship_Velocity = 150.f * dt.asSeconds();
+		//** Velocidades 
+
+		float Ast_Velocity = (10.f) * dt.asSeconds();
+
+		float Ship_Velocity_Right = (150.f - 50.f) * dt.asSeconds();
+		float Ship_Velocity_Left = (150.f + 50.f) * dt.asSeconds();
 
 		
-		// Movimentação do Asteroide
+		//** Movimentação do Asteroide
 
-		asteroide.move(0.f, Ast_Velocity);
+		asteroide.move(-50.f * dt.asSeconds(), Ast_Velocity);
 
-		asteroide.rotate(1.f);
+		asteroide.rotate(2.f);
 
-		//Movimentos
+		//** Movimento involuntário da nave
+		if (!(Keyboard::isKeyPressed(Keyboard::Left) || Keyboard::isKeyPressed(Keyboard::Right) || Keyboard::isKeyPressed(Keyboard::Up)
+			|| Keyboard::isKeyPressed(Keyboard::Down)))
+		{
+			nave.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+		}
+
+		//** Movimentos de controle da nave
 
 		if (Keyboard::isKeyPressed(Keyboard::Left))
 		{
-			nave.move(-Ship_Velocity, 0.f);
+			nave.move(-Ship_Velocity_Left, -50.f * dt.asSeconds());
 		}
 
-		if (Keyboard::isKeyPressed(sf::Keyboard::Right))
+		if (Keyboard::isKeyPressed(Keyboard::Right))
 		{
-			nave.move(Ship_Velocity, 0.f);
+			nave.move(Ship_Velocity_Right, -50.f * dt.asSeconds());
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Up))
 		{
-			nave.move(0.f, -Ship_Velocity);
+			nave.move(-50.f * dt.asSeconds(), -Ship_Velocity_Left);
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Down))
 		{
-			nave.move(0.f, Ship_Velocity);
+			nave.move(-50.f * dt.asSeconds(), Ship_Velocity_Right);
 		}
 
+
+		if (Keyboard::isKeyPressed(Keyboard::Left) && Keyboard::isKeyPressed(Keyboard::Down))
+		{
+			nave.move(-Ship_Velocity_Left * 0.2, Ship_Velocity_Right * 0.2);
+			cout << Ship_Velocity_Left << endl;
+			cout << Ship_Velocity_Right << endl;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Left) && Keyboard::isKeyPressed(Keyboard::Up))
+		{
+			nave.move(-Ship_Velocity_Left * 0.2, -Ship_Velocity_Left * 0.2);
+			cout << Ship_Velocity_Left << endl;
+			cout << Ship_Velocity_Right << endl;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Right) && Keyboard::isKeyPressed(Keyboard::Down))
+		{
+			nave.move(Ship_Velocity_Right * 0.2, Ship_Velocity_Right * 0.2);
+			cout << Ship_Velocity_Left << endl;
+			cout << Ship_Velocity_Right << endl;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Right) && Keyboard::isKeyPressed(Keyboard::Up))
+		{
+			nave.move(Ship_Velocity_Right * 0.2, -Ship_Velocity_Left * 0.2);
+			cout << Ship_Velocity_Left << endl;
+			cout << Ship_Velocity_Right << endl;
+		}
+
+
+		//** Polling Eventos
 
 		while (window.pollEvent(event))
 		{
@@ -88,20 +140,29 @@ int main()
 			}
 		}
 
-			
-		//Limpar a janela
-		window.clear(Color::Black);
+		//** Configurações da Visão 
 
-		//Desenhar
+		View.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds()); // just move the view here in any direction-the tiles will follow automatically
+		const sf::Vector2f viewOffset(viewStart - View.getCenter());
+		sf::Vector2f spriteOffset;
+		spriteOffset.x = floor(viewOffset.x / bg_tex.getSize().x) * bg_tex.getSize().x;
+		spriteOffset.y = floor(viewOffset.y / bg_tex.getSize().y) * bg_tex.getSize().y;
+		bg.setPosition(spriteStart - spriteOffset);
+
+			
+		//** Limpar a janela
+		window.clear(Color::Black);
+		window.setView(View);
+
+		//** Desenhar
 		window.draw(bg);
 		window.draw(nave);
 		window.draw(asteroide);
 
-		//Terminar o Frame
+		//** Terminar o Frame
 		window.display();
-
 	}
 
-	//Fim do aplicativo
+	//** Fim do aplicativo
 	return 0;
 }
