@@ -5,9 +5,8 @@ int main()
 {
 	//Janela
 
-	RenderWindow window(VideoMode(800, 600), "Projeto AED1", Style::Titlebar | Style::Close);
+	RenderWindow window(VideoMode(800, 600), "Meteoro", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
-
 
 	Clock deltaClock;
 
@@ -20,7 +19,7 @@ int main()
 	Sprite nave(ship_tex);
 
 	//Configuraçoes da nave.
-	nave.setPosition(Vector2f(384.f, 284.f));
+	nave.setPosition(Vector2f(384.f, 552.f));
 	nave.setScale(1.5f, 1.5f);
 
 	//** Asteroide
@@ -28,7 +27,7 @@ int main()
 	ast_tex.loadFromFile("Assets/Asteroid.png");
 
 	Sprite asteroide(ast_tex);
-	asteroide.setScale(2.6f, 2.6f);
+	asteroide.setScale(1.5f, 1.5f);
 
 	//Posicao do asteroide.
 	srand(time(0));
@@ -56,7 +55,7 @@ int main()
 	//** Enquanto Janela está aberta
 	while (window.isOpen())
 	{
-		Event event;
+		Event evento;
 
 		Time dt = deltaClock.restart();
 
@@ -82,7 +81,7 @@ int main()
 		}
 
 		//** Movimentos de controle da nave
-
+		
 		if (Keyboard::isKeyPressed(Keyboard::Left))
 		{
 			nave.move(-Ship_Velocity_Left, -50.f * dt.asSeconds());
@@ -132,11 +131,15 @@ int main()
 
 		//** Polling Eventos
 
-		while (window.pollEvent(event))
+		while (window.pollEvent(evento))
 		{
-			if (event.type == Event::Closed)
+			switch (evento.type)
 			{
-				window.close();
+			case Event::Closed:
+				{
+					window.close();
+					break;
+				}
 			}
 		}
 

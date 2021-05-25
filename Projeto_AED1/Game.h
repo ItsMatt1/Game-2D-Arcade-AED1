@@ -31,3 +31,8 @@ public:
 
 };
 
+class Menu
+{
+
+};
+
