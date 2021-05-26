@@ -57,7 +57,7 @@ public:
 // Principal
 int main()
 {
-	// srand(time(NULL));
+	//srand(time(NULL));
 	 
 	// Janela
 	RenderWindow window(VideoMode(800, 600), "Meteoro", Style::Titlebar | Style::Close);
@@ -83,8 +83,9 @@ int main()
 	int shootTimer = 20;
 
 	//Iniciando inimigo
+	int enemySpawnTimer = 0;
 	vector<Meteoro> enemies;
-	enemies.push_back(Meteoro(&enemyTex,window.getSize()));
+	enemies.push_back(Meteoro(&enemyTex, window.getSize()));
 
 	// Visão do mapa
 	View View(window.getDefaultView());
@@ -98,6 +99,8 @@ int main()
 	// Limites da Visão
 	const Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
 	const Vector2f spriteStart(fBounds.left, fBounds.top);
+
+	int tiroForaDaTela = 0, meteoroForaDaTela = 673;
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
@@ -161,6 +164,7 @@ int main()
 		*/
 		
 		// Atirando
+
 		if (shootTimer < 20)
 		{
 			shootTimer++;
@@ -172,18 +176,48 @@ int main()
 		}
 
 		// Bullets
-		
+
 		// Fora da tela
 		for (size_t i = 0; i < player.bullets.size(); i++)
 		{
 			player.bullets[i].shape.move(0.f + -50.f * dt.asSeconds(), -15.f+ -50.f * dt.asSeconds());
 
-			if (player.bullets[i].shape.getPosition().x > window.getSize().x)
+			if (player.bullets[i].shape.getPosition().y < tiroForaDaTela)
 			{
 				player.bullets.erase(player.bullets.begin() + i);
 			}
 		}
-		// Colisão com inimigos
+		tiroForaDaTela--;
+
+		//Inimigos
+		/*
+		if (enemySpawnTimer < 20)
+		{
+			enemySpawnTimer++;
+		}
+		if (enemySpawnTimer >= 20)
+		{
+			enemies.push_back(Meteoro(&enemyTex, window.getSize()));
+			enemySpawnTimer = 0; //respawn cooldown 
+		}*/
+		for (size_t i = 0; i < enemies.size(); i++)
+		{
+			//Movimentação dos inimigos
+			enemies[i].shape.move(0.f, 2.f);
+
+			//Apaga inimigos fora da tela
+			if (enemies[i].shape.getPosition().y > meteoroForaDaTela)
+			{
+				enemies.erase(enemies.begin() + i);
+			}
+			// Colisão com inimigos
+			if (enemies[i].shape.getGlobalBounds().intersects(player.shape.getGlobalBounds()))
+			{
+				enemies.erase(enemies.begin() + i);
+				player.shape.setColor(Color(0,0,0,0));
+			}
+		}
+		meteoroForaDaTela--;
 
 		// Configurações da Visão 
 		
