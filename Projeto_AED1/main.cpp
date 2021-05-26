@@ -9,6 +9,7 @@ int main()
 	window.setFramerateLimit(60);
 
 	Clock deltaClock;
+	window.setKeyRepeatEnabled(true);
 
 	//** Assets
 
@@ -67,8 +68,9 @@ int main()
 
 		//** Velocidades 
 
+		int moveSpeed = 6;
 		float Ast_Velocity = (10.f) * dt.asSeconds();
-
+		float Tiro_Velocity = (10.f) * dt.asSeconds();
 		float Ship_Velocity_Right = (150.f - 50.f) * dt.asSeconds();
 		float Ship_Velocity_Left = (150.f + 50.f) * dt.asSeconds();
 
@@ -86,39 +88,40 @@ int main()
 			nave.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 		}
 
-		//** Movimentos de controle da nave
+		//** Atirando
 		if (!Keyboard::isKeyPressed(Keyboard::Space))
 		{
 			tiro.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 		}
 
 		if (Keyboard::isKeyPressed(Keyboard::Key::Space))
-		{	
+		{
 			tiro.setPosition(nave.getPosition().x + 17.f, nave.getPosition().y + -17.f);
 			tiro.setScale(2.0f, 2.0f);
-
+			tiro.move(Tiro_Velocity, -50.f * dt.asSeconds());
 		}
+
+		//** Movimentos de controle da nave
+		//Movimentos no eixo X e no eixo Y
 
 		if (Keyboard::isKeyPressed(Keyboard::A))
 		{
 			nave.move(-Ship_Velocity_Left, -50.f * dt.asSeconds());
 		}
-
-		if (Keyboard::isKeyPressed(Keyboard::D))
+		else if (Keyboard::isKeyPressed(Keyboard::D))
 		{
 			nave.move(Ship_Velocity_Right, -50.f * dt.asSeconds());
 		}
-
-		if (Keyboard::isKeyPressed(Keyboard::W))
+		else if (Keyboard::isKeyPressed(Keyboard::W))
 		{
-			nave.move(-50.f * dt.asSeconds(), -Ship_Velocity_Left);
+			nave.move(Vector2f(-50.f * dt.asSeconds(), -moveSpeed));
 		}
-
-		if (Keyboard::isKeyPressed(Keyboard::S))
+		else if (Keyboard::isKeyPressed(Keyboard::S))
 		{
 			nave.move(-50.f * dt.asSeconds(), Ship_Velocity_Right);
 		}
 
+		//Movimentos em diagonal
 
 		if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::S))
 		{
@@ -163,8 +166,8 @@ int main()
 		//** Configurações da Visão 
 
 		View.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds()); // just move the view here in any direction-the tiles will follow automatically
-		const sf::Vector2f viewOffset(viewStart - View.getCenter());
-		sf::Vector2f spriteOffset;
+		const Vector2f viewOffset(viewStart - View.getCenter());
+		Vector2f spriteOffset;
 		spriteOffset.x = floor(viewOffset.x / bg_tex.getSize().x) * bg_tex.getSize().x;
 		spriteOffset.y = floor(viewOffset.y / bg_tex.getSize().y) * bg_tex.getSize().y;
 		bg.setPosition(spriteStart - spriteOffset);
