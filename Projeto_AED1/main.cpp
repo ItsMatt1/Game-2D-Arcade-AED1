@@ -5,11 +5,11 @@ class Bullet
 public:
 	Sprite shape;
 
-	Bullet(Texture *texture, Vector2f pos)
+	Bullet(Texture *texture, float posx, float posy)
 	{
 		this->shape.setTexture(*texture);
 		this->shape.setScale(2.0f, 2.0f);
-		this->shape.setPosition(pos);
+		this->shape.setPosition(posx, posy);
 	}
 };
 
@@ -63,6 +63,7 @@ int main()
 
 	// Iniciando jogador
 	Nave player(&playerTex);
+	int shootTimer = 20;
 
 	// Visão do mapa
 
@@ -138,15 +139,24 @@ int main()
 		
 
 		// Update
-		if (Keyboard::isKeyPressed(Keyboard::Space))
+		if (shootTimer < 20)
 		{
-			player.bullets.push_back(Bullet(&bulletTex, player.shape.getPosition()));
+			shootTimer++;
+		}
+		if (Keyboard::isKeyPressed(Keyboard::Space) && shootTimer >=20)
+		{
+			player.bullets.push_back(Bullet(&bulletTex, player.shape.getPosition().x + 17.f, player.shape.getPosition().y - 17.f));
+			shootTimer = 0; //resetar cooldows bala
 		}
 
 		// Bullets
+
+		
 		// Fora da tela
 		for (size_t i = 0; i < player.bullets.size(); i++)
 		{
+			player.bullets[i].shape.move(0.f + -50.f * dt.asSeconds(), -15.f+ -50.f * dt.asSeconds());
+
 			if (player.bullets[i].shape.getPosition().x > window.getSize().x)
 			{
 				player.bullets.erase(player.bullets.begin() + i);
