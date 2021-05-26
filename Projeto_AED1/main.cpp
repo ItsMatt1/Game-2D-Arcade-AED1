@@ -35,6 +35,24 @@ public:
 class Meteoro
 {
 public:
+	Sprite shape;
+
+	int HP;
+	int HPMax;
+
+	Meteoro(Texture* texture, Vector2u windowSize)
+	{
+		//srand(time(0));
+		this->HPMax = rand() % 3 + 1;
+		this->HP = this->HPMax;
+
+		this->shape.setOrigin(24.f, 24.f);
+		this->shape.setTexture(*texture);
+		this->shape.setScale(1.5f, 1.5f);
+		this->shape.setPosition(windowSize.y - this->shape.getGlobalBounds().height, rand()% windowSize.x - this->shape.getGlobalBounds().width);
+	}
+
+	~Meteoro(){}
 };
 
 
@@ -65,8 +83,13 @@ int main()
 	Nave player(&playerTex);
 	int shootTimer = 20;
 
-	// Visão do mapa
+	//Iniciando inimigo
+	vector<Meteoro> enemies;
 
+	enemies.push_back(Meteoro(&enemyTex,window.getSize()));
+
+	// Visão do mapa
+	
 	View View(window.getDefaultView());
 	FloatRect fBounds(0.f, 0.f, 3200.f, 2400.f);
 	IntRect	iBounds(fBounds);
@@ -98,6 +121,7 @@ int main()
 				}
 			}
 		}
+	
 		// Movimento involuntário da nave
 		if (!(Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::W)
 			|| Keyboard::isKeyPressed(Keyboard::S)))
@@ -163,6 +187,7 @@ int main()
 			}
 		}
 		// Colisão com inimigos
+		
 
 
 		// Configurações da Visão 
@@ -187,9 +212,10 @@ int main()
 		{
 			window.draw(player.bullets[i].shape);
 		}
-		
-	
-
+		for (size_t i = 0; i < enemies.size(); i++)
+		{
+			window.draw(enemies[i].shape);
+		}
 
 		// Terminar o Frame
 		window.display();
