@@ -70,9 +70,9 @@ int main()
 
 		int moveSpeed = 6;
 		float Ast_Velocity = (10.f) * dt.asSeconds();
-		float Tiro_Velocity = (10.f) * dt.asSeconds();
-		float Ship_Velocity_Right = (150.f - 50.f) * dt.asSeconds();
-		float Ship_Velocity_Left = (150.f + 50.f) * dt.asSeconds();
+
+		float Ship_Velocity_Right = (200.f - 50.f) * dt.asSeconds();
+		float Ship_Velocity_Left = (200.f + 50.f) * dt.asSeconds();
 
 		
 		//** Movimentação do Asteroide
@@ -88,7 +88,7 @@ int main()
 			nave.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 		}
 
-		//** Atirando
+		//** Movimentos do tiro
 		if (!Keyboard::isKeyPressed(Keyboard::Space))
 		{
 			tiro.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
@@ -125,27 +125,24 @@ int main()
 
 		if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::S))
 		{
-			nave.move(-Ship_Velocity_Left * 0.2, Ship_Velocity_Right * 0.2);
-			cout << Ship_Velocity_Left << endl;
-			cout << Ship_Velocity_Right << endl;
+			nave.move(-Ship_Velocity_Left * 0.00005, Ship_Velocity_Right * 0.00005);
+			cout << "LEFT - DOWN" << endl;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::W))
+		else if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::W))
 		{
-			nave.move(-Ship_Velocity_Left * 0.2, -Ship_Velocity_Left * 0.2);
-			cout << Ship_Velocity_Left << endl;
-			cout << Ship_Velocity_Right << endl;
+			nave.move(-Ship_Velocity_Left * 0.05, -Ship_Velocity_Left * 0.05);
+			cout << "LEFT - UP" << endl;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::S))
+
+		else if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::S))
 		{
 			nave.move(Ship_Velocity_Right * 0.2, Ship_Velocity_Right * 0.2);
-			cout << Ship_Velocity_Left << endl;
-			cout << Ship_Velocity_Right << endl;
+			cout << "RIGHT - DOWN" << endl;
 		}
-		if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::W))
+		else if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::W))
 		{
-			nave.move(Ship_Velocity_Right * 0.2, -Ship_Velocity_Left * 0.2);
-			cout << Ship_Velocity_Left << endl;
-			cout << Ship_Velocity_Right << endl;
+			nave.move(Ship_Velocity_Right * 0.3, -Ship_Velocity_Left * 0.05);
+			cout << "RIGHT - UP" << endl;
 		}
 
 
