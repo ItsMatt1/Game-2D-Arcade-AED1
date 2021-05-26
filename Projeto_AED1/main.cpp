@@ -28,7 +28,6 @@ public:
 
 		this->shape.setScale(1.5f, 1.5f);
 		this->shape.setPosition(Vector2f(384.f, 552.f));
-
 	}
 };
 
@@ -42,7 +41,6 @@ public:
 
 	Meteoro(Texture* texture, Vector2u windowSize)
 	{
-		//srand(time(0));
 		this->HPMax = rand() % 3 + 1;
 		this->HP = this->HPMax;
 
@@ -59,8 +57,9 @@ public:
 // Principal
 int main()
 {
+	// srand(time(NULL));
+	 
 	// Janela
-
 	RenderWindow window(VideoMode(800, 600), "Meteoro", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
 
@@ -85,11 +84,9 @@ int main()
 
 	//Iniciando inimigo
 	vector<Meteoro> enemies;
-
 	enemies.push_back(Meteoro(&enemyTex,window.getSize()));
 
 	// Visão do mapa
-	
 	View View(window.getDefaultView());
 	FloatRect fBounds(0.f, 0.f, 3200.f, 2400.f);
 	IntRect	iBounds(fBounds);
@@ -101,7 +98,6 @@ int main()
 	// Limites da Visão
 	const Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
 	const Vector2f spriteStart(fBounds.left, fBounds.top);
-	
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
@@ -122,29 +118,32 @@ int main()
 			}
 		}
 	
-		// Movimento involuntário da nave
-		if (!(Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::W)
-			|| Keyboard::isKeyPressed(Keyboard::S)))
+		// correção do movimento involuntário da nave
+		player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+
+		//Correção do movimento involuntario do asteroide e adicionando rotação
+		for (size_t i = 0; i < enemies.size(); i++)
 		{
-			player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+			enemies[i].shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+			enemies[i].shape.rotate(2.f);
 		}
 
 		//Player
 		if (Keyboard::isKeyPressed(Keyboard::W))
 		{
-			player.shape.move(0.f + -50.f * dt.asSeconds(), -5.f + -50.f * dt.asSeconds());
+			player.shape.move(0.f, -5.f);
 		}
 		if (Keyboard::isKeyPressed(Keyboard::A))
 		{
-			player.shape.move(-5.f + -50.f * dt.asSeconds(), 0.f + -50.f * dt.asSeconds());
+			player.shape.move(-5.f, 0.f);
 		}
 		if (Keyboard::isKeyPressed(Keyboard::S))
 		{
-			player.shape.move(0.f + -50.f * dt.asSeconds(), 5.f + -50.f * dt.asSeconds());
+			player.shape.move(0.f, 5.f);
 		}
 		if (Keyboard::isKeyPressed(Keyboard::D))
 		{
-			player.shape.move(5.f + -50.f * dt.asSeconds(), 0.f + -50.f * dt.asSeconds());
+			player.shape.move(5.f, 0.f);
 		}
 
 		// Colisão com a janela 
@@ -161,8 +160,7 @@ int main()
 			player.shape.setPosition(player.shape.getPosition().x, window.getSize().y - player.shape.getGlobalBounds().height);
 		*/
 		
-
-		// Update
+		// Atirando
 		if (shootTimer < 20)
 		{
 			shootTimer++;
@@ -174,7 +172,6 @@ int main()
 		}
 
 		// Bullets
-
 		
 		// Fora da tela
 		for (size_t i = 0; i < player.bullets.size(); i++)
@@ -187,8 +184,6 @@ int main()
 			}
 		}
 		// Colisão com inimigos
-		
-
 
 		// Configurações da Visão 
 		
@@ -198,8 +193,6 @@ int main()
 		spriteOffset.x = floor(viewOffset.x / background_tex.getSize().x) * background_tex.getSize().x;
 		spriteOffset.y = floor(viewOffset.y / background_tex.getSize().y) * background_tex.getSize().y;
 		background.setPosition(spriteStart - spriteOffset);
-		
-
 			
 		// Limpar a janela
 		window.clear(Color::Black);
