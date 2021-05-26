@@ -1,152 +1,90 @@
 #include "Game.h"
 
+class Bullet
+{
+public:
+	Sprite shape;
+
+	Bullet(Texture *texture, Vector2f pos)
+	{
+		this->shape.setTexture(*texture);
+		this->shape.setScale(2.0f, 2.0f);
+		this->shape.setPosition(pos);
+	}
+};
+
+class Nave
+{
+public:
+	Sprite shape;
+	Texture *texture;
+
+	vector<Bullet> bullets;
+
+	Nave(Texture* texture)
+	{
+		this->texture = texture;
+		this->shape.setTexture(*texture);
+
+		this->shape.setScale(1.5f, 1.5f);
+		this->shape.setPosition(Vector2f(384.f, 552.f));
+
+	}
+};
+
+class Meteoro
+{
+public:
+};
+
+
 // Principal
 int main()
 {
-	//Janela
+	// Janela
 
 	RenderWindow window(VideoMode(800, 600), "Meteoro", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
 
 	Clock deltaClock;
-	window.setKeyRepeatEnabled(true);
 
-	//** Assets
+	// Iniciando texturas
+	Texture playerTex;
+	playerTex.loadFromFile("Assets/Spaceship.png");
 
-	//** Nave
-	Texture ship_tex;
-	ship_tex.loadFromFile("Assets/Spaceship.png");
+	Texture enemyTex;
+	enemyTex.loadFromFile("Assets/Asteroid.png");
 
-	Sprite nave(ship_tex);
+	Texture bulletTex;
+	bulletTex.loadFromFile("Assets/bullet.png");
 
-	//Configuraçoes da nave.
-	nave.setPosition(Vector2f(384.f, 552.f));
-	nave.setScale(1.5f, 1.5f);
+	Texture background_tex;
+	background_tex.loadFromFile("Assets/Background.png");
 
-	//** Tiro
-	Texture tiro_tex;
-	tiro_tex.loadFromFile("Assets/bullet.png");
+	// Iniciando jogador
+	Nave player(&playerTex);
 
-	Sprite tiro(tiro_tex);
-
-	//** Asteroide
-	Texture ast_tex;
-	ast_tex.loadFromFile("Assets/Asteroid.png");
-
-	Sprite asteroide(ast_tex);
-	asteroide.setScale(1.5f, 1.5f);
-
-	//Posicao do asteroide.
-	srand(time(0));
-	asteroide.setOrigin(24.f, 24.f);
-	asteroide.setPosition(((rand() % 640) + 1), -(rand() % 600));
-
-	//** Background
-	Texture bg_tex;
-	bg_tex.loadFromFile("Assets/Background.png");
-
-	//** Visão do mapa
+	// Visão do mapa
 
 	View View(window.getDefaultView());
 	FloatRect fBounds(0.f, 0.f, 3200.f, 2400.f);
 	IntRect	iBounds(fBounds);
-	bg_tex.setRepeated(true);
+	background_tex.setRepeated(true);
 
-	//** Sprite do Background
-	Sprite bg(bg_tex, iBounds);
+	// Sprite do Background
+	Sprite background(background_tex, iBounds);
 
-	//** Limites da Visão
-	const sf::Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
-	const sf::Vector2f spriteStart(fBounds.left, fBounds.top);
+	// Limites da Visão
+	const Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
+	const Vector2f spriteStart(fBounds.left, fBounds.top);
+	
 
-	//** Enquanto Janela está aberta
+	// Enquanto Janela está aberta
 	while (window.isOpen())
 	{
 		Event evento;
 
 		Time dt = deltaClock.restart();
-
-		//** Velocidades 
-
-		int moveSpeed = 6;
-		float Ast_Velocity = (10.f) * dt.asSeconds();
-
-		float Ship_Velocity_Right = (200.f - 50.f) * dt.asSeconds();
-		float Ship_Velocity_Left = (200.f + 50.f) * dt.asSeconds();
-
-		
-		//** Movimentação do Asteroide
-
-		asteroide.move(-50.f * dt.asSeconds(), Ast_Velocity);
-
-		asteroide.rotate(2.f);
-
-		//** Movimento involuntário da nave
-		if (!(Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::W)
-			|| Keyboard::isKeyPressed(Keyboard::S)))
-		{
-			nave.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-		}
-
-		//** Movimentos do tiro
-		if (!Keyboard::isKeyPressed(Keyboard::Space))
-		{
-			tiro.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-		}
-
-		if (Keyboard::isKeyPressed(Keyboard::Key::Space))
-		{
-			tiro.setPosition(nave.getPosition().x + 17.f, nave.getPosition().y + -17.f);
-			tiro.setScale(2.0f, 2.0f);
-			tiro.move(Tiro_Velocity, -50.f * dt.asSeconds());
-		}
-
-		//** Movimentos de controle da nave
-		//Movimentos no eixo X e no eixo Y
-
-		if (Keyboard::isKeyPressed(Keyboard::A))
-		{
-			nave.move(-Ship_Velocity_Left, -50.f * dt.asSeconds());
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::D))
-		{
-			nave.move(Ship_Velocity_Right, -50.f * dt.asSeconds());
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::W))
-		{
-			nave.move(Vector2f(-50.f * dt.asSeconds(), -moveSpeed));
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::S))
-		{
-			nave.move(-50.f * dt.asSeconds(), Ship_Velocity_Right);
-		}
-
-		//Movimentos em diagonal
-
-		if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::S))
-		{
-			nave.move(-Ship_Velocity_Left * 0.00005, Ship_Velocity_Right * 0.00005);
-			cout << "LEFT - DOWN" << endl;
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::A) && Keyboard::isKeyPressed(Keyboard::W))
-		{
-			nave.move(-Ship_Velocity_Left * 0.05, -Ship_Velocity_Left * 0.05);
-			cout << "LEFT - UP" << endl;
-		}
-
-		else if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::S))
-		{
-			nave.move(Ship_Velocity_Right * 0.2, Ship_Velocity_Right * 0.2);
-			cout << "RIGHT - DOWN" << endl;
-		}
-		else if (Keyboard::isKeyPressed(Keyboard::D) && Keyboard::isKeyPressed(Keyboard::W))
-		{
-			nave.move(Ship_Velocity_Right * 0.3, -Ship_Velocity_Left * 0.05);
-			cout << "RIGHT - UP" << endl;
-		}
-
-
-		//** Polling Eventos
 
 		while (window.pollEvent(evento))
 		{
@@ -159,31 +97,94 @@ int main()
 				}
 			}
 		}
+		// Movimento involuntário da nave
+		if (!(Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::W)
+			|| Keyboard::isKeyPressed(Keyboard::S)))
+		{
+			player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+		}
 
-		//** Configurações da Visão 
+		//Player
+		if (Keyboard::isKeyPressed(Keyboard::W))
+		{
+			player.shape.move(0.f + -50.f * dt.asSeconds(), -5.f + -50.f * dt.asSeconds());
+		}
+		if (Keyboard::isKeyPressed(Keyboard::A))
+		{
+			player.shape.move(-5.f + -50.f * dt.asSeconds(), 0.f + -50.f * dt.asSeconds());
+		}
+		if (Keyboard::isKeyPressed(Keyboard::S))
+		{
+			player.shape.move(0.f + -50.f * dt.asSeconds(), 5.f + -50.f * dt.asSeconds());
+		}
+		if (Keyboard::isKeyPressed(Keyboard::D))
+		{
+			player.shape.move(5.f + -50.f * dt.asSeconds(), 0.f + -50.f * dt.asSeconds());
+		}
 
+		// Colisão com a janela 
+		//nao funciona devido ao efeito paralaxe
+
+		/*
+		if (player.shape.getPosition().x <= 0) //esquerda
+			player.shape.setPosition(0.f, player.shape.getPosition().y);
+		if (player.shape.getPosition().x >= window.getSize().x - -player.shape.getGlobalBounds().width) //direita
+			player.shape.setPosition(window.getSize().x - player.shape.getGlobalBounds().width, player.shape.getPosition().y);
+		if (player.shape.getPosition().y <= 0) //cima
+			player.shape.setPosition(player.shape.getPosition().x, 0.f);
+		if (player.shape.getPosition().y >= window.getSize().y - player.shape.getGlobalBounds().height) //baixo
+			player.shape.setPosition(player.shape.getPosition().x, window.getSize().y - player.shape.getGlobalBounds().height);
+		*/
+		
+
+		// Update
+		if (Keyboard::isKeyPressed(Keyboard::Space))
+		{
+			player.bullets.push_back(Bullet(&bulletTex, player.shape.getPosition()));
+		}
+
+		// Bullets
+		// Fora da tela
+		for (size_t i = 0; i < player.bullets.size(); i++)
+		{
+			if (player.bullets[i].shape.getPosition().x > window.getSize().x)
+			{
+				player.bullets.erase(player.bullets.begin() + i);
+			}
+		}
+		// Colisão com inimigos
+
+
+		// Configurações da Visão 
+		
 		View.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds()); // just move the view here in any direction-the tiles will follow automatically
 		const Vector2f viewOffset(viewStart - View.getCenter());
 		Vector2f spriteOffset;
-		spriteOffset.x = floor(viewOffset.x / bg_tex.getSize().x) * bg_tex.getSize().x;
-		spriteOffset.y = floor(viewOffset.y / bg_tex.getSize().y) * bg_tex.getSize().y;
-		bg.setPosition(spriteStart - spriteOffset);
+		spriteOffset.x = floor(viewOffset.x / background_tex.getSize().x) * background_tex.getSize().x;
+		spriteOffset.y = floor(viewOffset.y / background_tex.getSize().y) * background_tex.getSize().y;
+		background.setPosition(spriteStart - spriteOffset);
+		
 
 			
-		//** Limpar a janela
+		// Limpar a janela
 		window.clear(Color::Black);
 		window.setView(View);
 
-		//** Desenhar
-		window.draw(bg);
-		window.draw(nave);
-		window.draw(tiro);
-		window.draw(asteroide);
+		// Desenhar
+		window.draw(background);
+		window.draw(player.shape);
+		for (size_t i = 0; i < player.bullets.size(); i++)
+		{
+			window.draw(player.bullets[i].shape);
+		}
+		
+	
 
-		//** Terminar o Frame
+
+		// Terminar o Frame
 		window.display();
 	}
 
-	//** Fim do aplicativo
+	// Fim do aplicativo
 	return 0;
 }
