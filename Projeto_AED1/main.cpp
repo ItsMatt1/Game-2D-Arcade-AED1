@@ -147,7 +147,7 @@ int main()
 
 	Sound bullet_sound;
 	bullet_sound.setBuffer(buffer);
-	bullet_sound.setVolume(50.f);
+	bullet_sound.setVolume(30.f);
 
 
 	// som game over
