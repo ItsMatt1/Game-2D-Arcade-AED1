@@ -46,7 +46,7 @@ public:
 
 	Meteoro(Texture* texture, Vector2u windowSize)
 	{
-		this->HPMax = rand() % 3 + 1;
+		this->HPMax = 1;
 		this->HP = this->HPMax;
 
 		this->shape.setOrigin(24.f, 24.f);
@@ -116,6 +116,13 @@ int main()
 	// Limites da Visão
 	const Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
 	const Vector2f spriteStart(fBounds.left, fBounds.top);
+
+
+	//** Som
+	Music music;
+	if (!music.openFromFile("OST/LOL.ogg"))
+		return -1; // error
+	music.play();
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
