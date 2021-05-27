@@ -1,8 +1,9 @@
 #include "Game.h"
 
 int tiroForaDaTela = 0, meteoroForaDaTela = 700;
-float b = 0;
+float b = 0, xmin = 0, xmax = 800, ymin = 0, ymax = 600;
 int a1 = 0, a2 = 800;
+bool gameOver = false;
 
 class Bullet
 {
@@ -137,7 +138,7 @@ int main()
 		return -1; 
 
 	music.play();
-	music.setLoop(true);
+	music.setLoop(true);	
 
 	// Som
 	SoundBuffer buffer;
@@ -147,6 +148,17 @@ int main()
 	Sound bullet_sound;
 	bullet_sound.setBuffer(buffer);
 	bullet_sound.setVolume(50.f);
+
+
+	// som game over
+	SoundBuffer buffer2;
+	if (!buffer2.loadFromFile("OST/GameOver.wav"))
+		return -1;
+
+	Sound sound2;
+	sound2.setBuffer(buffer2);
+	sound2.setVolume(40.f);
+
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
@@ -183,19 +195,19 @@ int main()
 			}
 
 			//Player
-			if (Keyboard::isKeyPressed(Keyboard::W))
+			if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up))
 			{
 				player.shape.move(0.f, -5.f);
 			}
-			if (Keyboard::isKeyPressed(Keyboard::A))
+			if (Keyboard::isKeyPressed(Keyboard::A) || Keyboard::isKeyPressed(Keyboard::Left))
 			{
 				player.shape.move(-5.f, 0.f);
 			}
-			if (Keyboard::isKeyPressed(Keyboard::S))
+			if (Keyboard::isKeyPressed(Keyboard::S) || Keyboard::isKeyPressed(Keyboard::Down))
 			{
 				player.shape.move(0.f, 5.f);
 			}
-			if (Keyboard::isKeyPressed(Keyboard::D))
+			if (Keyboard::isKeyPressed(Keyboard::D) || Keyboard::isKeyPressed(Keyboard::Right))
 			{
 				player.shape.move(5.f, 0.f);
 			}
@@ -212,6 +224,30 @@ int main()
 				player.shape.setPosition(player.shape.getPosition().x, 0.f);
 			if (player.shape.getPosition().y >= window.getSize().y - player.shape.getGlobalBounds().height) //baixo
 				player.shape.setPosition(player.shape.getPosition().x, window.getSize().y - player.shape.getGlobalBounds().height);
+			*/
+
+			/*
+			if (player.shape.getPosition().x <= xmin * dt.asSeconds())
+			{
+				player.shape.setPosition(xmin + (1 * dt.asSeconds()), player.shape.getPosition().y);
+			}
+			if (player.shape.getPosition().x >= xmax * dt.asSeconds())
+			{
+				player.shape.setPosition(xmax - (1 * dt.asSeconds()), player.shape.getPosition().y);
+			}
+			if (player.shape.getPosition().y <= ymin * dt.asSeconds())
+			{
+				player.shape.setPosition(player.shape.getPosition().x, ymin + (1 * dt.asSeconds()));
+			}
+			if (player.shape.getPosition().y >= ymax * dt.asSeconds())
+			{
+				player.shape.setPosition(player.shape.getPosition().x, ymin - (1 * dt.asSeconds()));
+			}
+
+			xmin -= 50 * dt.asSeconds();
+			xmax -= 50 * dt.asSeconds();
+			ymin -= 50 * dt.asSeconds();
+			ymax -= 50 * dt.asSeconds();
 			*/
 
 			// Atirando
@@ -321,6 +357,13 @@ int main()
 		{
 			window.draw(gameOverText);
 			music.stop();
+
+			if (player.HP == 0)
+			{
+				sound2.play();
+				player.HP--;
+			}
+
 		}
 
 		// Terminar o Frame
