@@ -48,7 +48,6 @@ public:
 	Meteoro(Texture* texture, Vector2u windowSize)
 	{
 		this->HPMax = rand () % 3 + 1; // ANTES
-		//this->HPMax = 1;  DEPOIS
 		this->HP = this->HPMax;
 
 		this->shape.setOrigin(24.f, 24.f);
@@ -66,7 +65,6 @@ public:
 // Principal
 int main()
 {
-	 
 	// Janela
 	RenderWindow window(VideoMode(800, 600), "Meteoro", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
@@ -117,7 +115,6 @@ int main()
 	//Iniciando inimigo
 	int enemySpawnTimer = 0;
 	vector<Meteoro> enemies;
-	//enemies.push_back(Meteoro(&enemyTex, window.getSize()));
 
 	// Visão do mapa
 	View View(window.getDefaultView());
@@ -135,7 +132,9 @@ int main()
 	// Musica
 	Music music;
 	if (!music.openFromFile("OST/LOL.ogg"))
+	{
 		return -1; 
+	}
 
 	music.play();
 	music.setLoop(true);	
@@ -143,22 +142,24 @@ int main()
 	// Som
 	SoundBuffer buffer;
 	if (!buffer.loadFromFile("OST/Bullet2.wav"))
+	{
 		return -1;
+	}
 
 	Sound bullet_sound;
 	bullet_sound.setBuffer(buffer);
 	bullet_sound.setVolume(30.f);
 
-
-	// som game over
+	// Som game over
 	SoundBuffer buffer2;
 	if (!buffer2.loadFromFile("OST/GameOver.wav"))
+	{
 		return -1;
+	}
 
 	Sound sound2;
 	sound2.setBuffer(buffer2);
 	sound2.setVolume(40.f);
-
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
@@ -177,7 +178,6 @@ int main()
 					break;
 				}
 			}
-			
 		}
 		if (player.HP > 0)
 		{
@@ -218,7 +218,6 @@ int main()
 			xmax -= 50.f * dt.asSeconds();
 			ymin -= 50.f * dt.asSeconds();
 			ymax -= 50.f * dt.asSeconds();
-
 			
 			if (player.shape.getPosition().x <= xmin)
 			{
@@ -322,8 +321,8 @@ int main()
 			spriteOffset.y = floor(viewOffset.y / background_tex.getSize().y) * background_tex.getSize().y;
 			background.setPosition(spriteStart - spriteOffset);
 		}
-		// Limpar a janela
 
+		// Limpar a janela
 		window.clear(Color::Black);
 		window.setView(View);
 
@@ -350,7 +349,6 @@ int main()
 				sound2.play();
 				player.HP--;
 			}
-
 		}
 
 		// Terminar o Frame
