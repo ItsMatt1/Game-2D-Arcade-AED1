@@ -213,42 +213,29 @@ int main()
 			}
 
 			// Colisão com a janela 
-			//nao funciona devido ao efeito paralaxe
 
-			/*
-			if (player.shape.getPosition().x <= 0) //esquerda
-				player.shape.setPosition(0.f, player.shape.getPosition().y);
-			if (player.shape.getPosition().x >= window.getSize().x - -player.shape.getGlobalBounds().width) //direita
-				player.shape.setPosition(window.getSize().x - player.shape.getGlobalBounds().width, player.shape.getPosition().y);
-			if (player.shape.getPosition().y <= 0) //cima
-				player.shape.setPosition(player.shape.getPosition().x, 0.f);
-			if (player.shape.getPosition().y >= window.getSize().y - player.shape.getGlobalBounds().height) //baixo
-				player.shape.setPosition(player.shape.getPosition().x, window.getSize().y - player.shape.getGlobalBounds().height);
-			*/
+			xmin -= 50.f * dt.asSeconds();
+			xmax -= 50.f * dt.asSeconds();
+			ymin -= 50.f * dt.asSeconds();
+			ymax -= 50.f * dt.asSeconds();
 
-			/*
-			if (player.shape.getPosition().x <= xmin * dt.asSeconds())
+			
+			if (player.shape.getPosition().x <= xmin)
 			{
-				player.shape.setPosition(xmin + (1 * dt.asSeconds()), player.shape.getPosition().y);
+				player.shape.setPosition(xmin + (1), player.shape.getPosition().y);
 			}
-			if (player.shape.getPosition().x >= xmax * dt.asSeconds())
+			if (player.shape.getPosition().x >= xmax - 48)
 			{
-				player.shape.setPosition(xmax - (1 * dt.asSeconds()), player.shape.getPosition().y);
+				player.shape.setPosition(xmax - (48), player.shape.getPosition().y);
 			}
-			if (player.shape.getPosition().y <= ymin * dt.asSeconds())
+			if (player.shape.getPosition().y <= ymin)
 			{
-				player.shape.setPosition(player.shape.getPosition().x, ymin + (1 * dt.asSeconds()));
+				player.shape.setPosition(player.shape.getPosition().x, ymin + (1));
 			}
-			if (player.shape.getPosition().y >= ymax * dt.asSeconds())
+			if (player.shape.getPosition().y >= ymax - 48)
 			{
-				player.shape.setPosition(player.shape.getPosition().x, ymin - (1 * dt.asSeconds()));
+				player.shape.setPosition(player.shape.getPosition().x, ymax - 48);
 			}
-
-			xmin -= 50 * dt.asSeconds();
-			xmax -= 50 * dt.asSeconds();
-			ymin -= 50 * dt.asSeconds();
-			ymax -= 50 * dt.asSeconds();
-			*/
 
 			// Atirando
 			if (shootTimer < 20)
