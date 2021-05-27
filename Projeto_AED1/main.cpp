@@ -1,5 +1,9 @@
 #include "Game.h"
 
+int tiroForaDaTela = 0, meteoroForaDaTela = 700;
+float b = 0;
+int a1 = 0, a2 = 800, score = 0;
+
 class Bullet
 {
 public:
@@ -16,13 +20,14 @@ public:
 class Nave
 {
 public:
+	int HP;
 	Sprite shape;
 	Texture *texture;
-
 	vector<Bullet> bullets;
 
 	Nave(Texture* texture)
 	{
+		this->HP = 1;
 		this->texture = texture;
 		this->shape.setTexture(*texture);
 
@@ -47,7 +52,10 @@ public:
 		this->shape.setOrigin(24.f, 24.f);
 		this->shape.setTexture(*texture);
 		this->shape.setScale(1.5f, 1.5f);
-		this->shape.setPosition(windowSize.y - this->shape.getGlobalBounds().height, rand()% windowSize.x - this->shape.getGlobalBounds().width);
+		srand(rand());
+		this->shape.setPosition(rand() % a2 + a1,b);
+		b -= 50.f;
+		a1 -= 17;
 	}
 
 	~Meteoro(){}
@@ -57,7 +65,6 @@ public:
 // Principal
 int main()
 {
-	//srand(time(NULL));
 	 
 	// Janela
 	RenderWindow window(VideoMode(800, 600), "Meteoro", Style::Titlebar | Style::Close);
@@ -85,7 +92,7 @@ int main()
 	//Iniciando inimigo
 	int enemySpawnTimer = 0;
 	vector<Meteoro> enemies;
-	enemies.push_back(Meteoro(&enemyTex, window.getSize()));
+	//enemies.push_back(Meteoro(&enemyTex, window.getSize()));
 
 	// Visão do mapa
 	View View(window.getDefaultView());
@@ -99,8 +106,6 @@ int main()
 	// Limites da Visão
 	const Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
 	const Vector2f spriteStart(fBounds.left, fBounds.top);
-
-	int tiroForaDaTela = 0, meteoroForaDaTela = 673;
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
@@ -164,7 +169,6 @@ int main()
 		*/
 		
 		// Atirando
-
 		if (shootTimer < 20)
 		{
 			shootTimer++;
@@ -176,22 +180,41 @@ int main()
 		}
 
 		// Bullets
-
-		// Fora da tela
 		for (size_t i = 0; i < player.bullets.size(); i++)
 		{
 			player.bullets[i].shape.move(0.f + -50.f * dt.asSeconds(), -15.f+ -50.f * dt.asSeconds());
 
+			// Se o tiro for pra fora da tela
 			if (player.bullets[i].shape.getPosition().y < tiroForaDaTela)
 			{
 				player.bullets.erase(player.bullets.begin() + i);
+				break;
+			}
+
+			//Se o tiro acertar o inimigo
+			for (size_t k = 0; k < enemies.size(); k++)
+			{
+				if (player.bullets[i].shape.getGlobalBounds().intersects(enemies[k].shape.getGlobalBounds()))
+				{
+					if (enemies[k].HP <= 1)
+					{
+						score += enemies[k].HPMax;
+						enemies.erase(enemies.begin() + k);
+					}
+					else
+					{
+						enemies[k].HP--; //Inimigo toma dano
+					}
+				player.bullets.erase(player.bullets.begin() + i);
+				break;
+				}
 			}
 		}
 		tiroForaDaTela--;
 
 		//Inimigos
-		/*
-		if (enemySpawnTimer < 20)
+		
+		if (enemySpawnTimer <20)
 		{
 			enemySpawnTimer++;
 		}
@@ -199,11 +222,11 @@ int main()
 		{
 			enemies.push_back(Meteoro(&enemyTex, window.getSize()));
 			enemySpawnTimer = 0; //respawn cooldown 
-		}*/
+		}
 		for (size_t i = 0; i < enemies.size(); i++)
 		{
 			//Movimentação dos inimigos
-			enemies[i].shape.move(0.f, 2.f);
+			enemies[i].shape.move(0.f, 4.f);
 
 			//Apaga inimigos fora da tela
 			if (enemies[i].shape.getPosition().y > meteoroForaDaTela)
@@ -214,10 +237,12 @@ int main()
 			if (enemies[i].shape.getGlobalBounds().intersects(player.shape.getGlobalBounds()))
 			{
 				enemies.erase(enemies.begin() + i);
-				player.shape.setColor(Color(0,0,0,0));
+				player.HP--; //player leva dano
+				break;
+				//player.shape.setColor(Color(0,0,0,0));
 			}
 		}
-		meteoroForaDaTela--;
+		meteoroForaDaTela -= dt.asSeconds() / 2;
 
 		// Configurações da Visão 
 		
