@@ -46,7 +46,8 @@ public:
 
 	Meteoro(Texture* texture, Vector2u windowSize)
 	{
-		this->HPMax = 1;
+		//this->HPMax = rand () % 3 + 1; // ANTES
+		this->HPMax = 1; // DEPOIS
 		this->HP = this->HPMax;
 
 		this->shape.setOrigin(24.f, 24.f);
@@ -118,11 +119,22 @@ int main()
 	const Vector2f spriteStart(fBounds.left, fBounds.top);
 
 
-	//** Som
+	// Musica
 	Music music;
 	if (!music.openFromFile("OST/LOL.ogg"))
-		return -1; // error
+		return -1; 
+
 	music.play();
+	music.setLoop(true);
+
+	// Som
+	SoundBuffer buffer;
+	if (!buffer.loadFromFile("OST/Bullet2.wav"))
+		return -1;
+
+	Sound bullet_sound;
+	bullet_sound.setBuffer(buffer);
+
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
@@ -193,6 +205,7 @@ int main()
 		}
 		if (Keyboard::isKeyPressed(Keyboard::Space) && shootTimer >=20)
 		{
+			bullet_sound.play();
 			player.bullets.push_back(Bullet(&bulletTex, player.shape.getPosition().x + 17.f, player.shape.getPosition().y - 17.f));
 			shootTimer = 0; //resetar cooldows bala
 		}
