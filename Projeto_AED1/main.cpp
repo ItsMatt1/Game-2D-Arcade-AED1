@@ -2,7 +2,7 @@
 
 int tiroForaDaTela = 0, meteoroForaDaTela = 700;
 float b = 0;
-int a1 = 0, a2 = 800, score = 0;
+int a1 = 0, a2 = 800;
 
 class Bullet
 {
@@ -71,7 +71,9 @@ int main()
 	window.setFramerateLimit(60);
 
 	Clock deltaClock;
-
+	Font font;
+	font.loadFromFile("Assets/upheavtt.ttf");
+	
 	// Iniciando texturas
 	Texture playerTex;
 	playerTex.loadFromFile("Assets/Spaceship.png");
@@ -85,7 +87,15 @@ int main()
 	Texture background_tex;
 	background_tex.loadFromFile("Assets/Background.png");
 
+	//Iniciando UI
+	Text scoreText;
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(25);
+	scoreText.setFillColor(Color::White);
+	scoreText.setPosition(7.f, 7.f);
+
 	// Iniciando jogador
+	int score = 0;
 	Nave player(&playerTex);
 	int shootTimer = 20;
 
@@ -126,8 +136,9 @@ int main()
 			}
 		}
 	
-		// correção do movimento involuntário da nave
+		// correção do movimento involuntário da nave e do score
 		player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+		scoreText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 
 		//Correção do movimento involuntario do asteroide e adicionando rotação
 		for (size_t i = 0; i < enemies.size(); i++)
@@ -226,7 +237,7 @@ int main()
 		for (size_t i = 0; i < enemies.size(); i++)
 		{
 			//Movimentação dos inimigos
-			enemies[i].shape.move(0.f, 4.f);
+			enemies[i].shape.move(0.f, 5.f);
 
 			//Apaga inimigos fora da tela
 			if (enemies[i].shape.getPosition().y > meteoroForaDaTela)
@@ -239,7 +250,6 @@ int main()
 				enemies.erase(enemies.begin() + i);
 				player.HP--; //player leva dano
 				break;
-				//player.shape.setColor(Color(0,0,0,0));
 			}
 		}
 		meteoroForaDaTela -= dt.asSeconds() / 2;
@@ -259,6 +269,8 @@ int main()
 
 		// Desenhar
 		window.draw(background);
+		scoreText.setString("Score: " + to_string(score));
+		window.draw(scoreText);
 		window.draw(player.shape);
 		for (size_t i = 0; i < player.bullets.size(); i++)
 		{
