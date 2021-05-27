@@ -101,6 +101,13 @@ int main()
 	gameOverText.setPosition(290.f, 0.f);
 	gameOverText.setString("GAME OVER!");
 
+	Text pauseText;
+	pauseText.setFont(font);
+	pauseText.setCharacterSize(40);
+	pauseText.setFillColor(Color::Yellow);
+	pauseText.setPosition(290.f, 0.f);
+	pauseText.setString("PAUSED");
+
 	// Iniciando jogador
 	int score = 0;
 	Nave player(&playerTex);
@@ -158,6 +165,7 @@ int main()
 					break;
 				}
 			}
+			
 		}
 		if (player.HP > 0)
 		{
@@ -165,6 +173,7 @@ int main()
 			player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 			scoreText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 			gameOverText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+			pauseText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 
 			//Correção do movimento involuntario do asteroide e adicionando rotação
 			for (size_t i = 0; i < enemies.size(); i++)
