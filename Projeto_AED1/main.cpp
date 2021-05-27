@@ -62,7 +62,6 @@ public:
 	~Meteoro(){}
 };
 
-
 // Principal
 int main()
 {
@@ -125,7 +124,6 @@ int main()
 	const Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
 	const Vector2f spriteStart(fBounds.left, fBounds.top);
 
-
 	// Musica
 	Music music;
 	if (!music.openFromFile("OST/LOL.ogg"))
@@ -142,7 +140,6 @@ int main()
 	Sound bullet_sound;
 	bullet_sound.setBuffer(buffer);
 	bullet_sound.setVolume(50.f);
-
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
@@ -300,8 +297,6 @@ int main()
 
 		// Desenhar
 		window.draw(background);
-		scoreText.setString("Score: " + to_string(score));
-		window.draw(scoreText);
 		window.draw(player.shape);
 		for (size_t i = 0; i < player.bullets.size(); i++)
 		{
@@ -311,6 +306,8 @@ int main()
 		{
 			window.draw(enemies[i].shape);
 		}
+		scoreText.setString("Score: " + to_string(score));
+		window.draw(scoreText);
 		if (player.HP <= 0)
 		{
 			window.draw(gameOverText);
