@@ -46,8 +46,8 @@ public:
 
 	Meteoro(Texture* texture, Vector2u windowSize)
 	{
-		//this->HPMax = rand () % 3 + 1; // ANTES
-		this->HPMax = 1; // DEPOIS
+		this->HPMax = rand () % 3 + 1; // ANTES
+		//this->HPMax = 1;  DEPOIS
 		this->HP = this->HPMax;
 
 		this->shape.setOrigin(24.f, 24.f);
@@ -95,6 +95,13 @@ int main()
 	scoreText.setFillColor(Color::White);
 	scoreText.setPosition(7.f, 7.f);
 
+	Text gameOverText;
+	gameOverText.setFont(font);
+	gameOverText.setCharacterSize(40);
+	gameOverText.setFillColor(Color::Red);
+	gameOverText.setPosition(290.f, 0.f);
+	gameOverText.setString("GAME OVER!");
+
 	// Iniciando jogador
 	int score = 0;
 	Nave player(&playerTex);
@@ -134,6 +141,7 @@ int main()
 
 	Sound bullet_sound;
 	bullet_sound.setBuffer(buffer);
+	bullet_sound.setVolume(50.f);
 
 
 	// Enquanto Janela está aberta
@@ -154,136 +162,139 @@ int main()
 				}
 			}
 		}
-	
-		// correção do movimento involuntário da nave e do score
-		player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-		scoreText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+		if (player.HP > 0)
+		{
+			// correção do movimento involuntário da nave/score/gameover
+			player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+			scoreText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+			gameOverText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
 
-		//Correção do movimento involuntario do asteroide e adicionando rotação
-		for (size_t i = 0; i < enemies.size(); i++)
-		{
-			enemies[i].shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-			enemies[i].shape.rotate(2.f);
-		}
-
-		//Player
-		if (Keyboard::isKeyPressed(Keyboard::W))
-		{
-			player.shape.move(0.f, -5.f);
-		}
-		if (Keyboard::isKeyPressed(Keyboard::A))
-		{
-			player.shape.move(-5.f, 0.f);
-		}
-		if (Keyboard::isKeyPressed(Keyboard::S))
-		{
-			player.shape.move(0.f, 5.f);
-		}
-		if (Keyboard::isKeyPressed(Keyboard::D))
-		{
-			player.shape.move(5.f, 0.f);
-		}
-
-		// Colisão com a janela 
-		//nao funciona devido ao efeito paralaxe
-
-		/*
-		if (player.shape.getPosition().x <= 0) //esquerda
-			player.shape.setPosition(0.f, player.shape.getPosition().y);
-		if (player.shape.getPosition().x >= window.getSize().x - -player.shape.getGlobalBounds().width) //direita
-			player.shape.setPosition(window.getSize().x - player.shape.getGlobalBounds().width, player.shape.getPosition().y);
-		if (player.shape.getPosition().y <= 0) //cima
-			player.shape.setPosition(player.shape.getPosition().x, 0.f);
-		if (player.shape.getPosition().y >= window.getSize().y - player.shape.getGlobalBounds().height) //baixo
-			player.shape.setPosition(player.shape.getPosition().x, window.getSize().y - player.shape.getGlobalBounds().height);
-		*/
-		
-		// Atirando
-		if (shootTimer < 20)
-		{
-			shootTimer++;
-		}
-		if (Keyboard::isKeyPressed(Keyboard::Space) && shootTimer >=20)
-		{
-			bullet_sound.play();
-			player.bullets.push_back(Bullet(&bulletTex, player.shape.getPosition().x + 17.f, player.shape.getPosition().y - 17.f));
-			shootTimer = 0; //resetar cooldows bala
-		}
-
-		// Bullets
-		for (size_t i = 0; i < player.bullets.size(); i++)
-		{
-			player.bullets[i].shape.move(0.f + -50.f * dt.asSeconds(), -15.f+ -50.f * dt.asSeconds());
-
-			// Se o tiro for pra fora da tela
-			if (player.bullets[i].shape.getPosition().y < tiroForaDaTela)
+			//Correção do movimento involuntario do asteroide e adicionando rotação
+			for (size_t i = 0; i < enemies.size(); i++)
 			{
-				player.bullets.erase(player.bullets.begin() + i);
-				break;
+				enemies[i].shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
+				enemies[i].shape.rotate(2.f);
 			}
 
-			//Se o tiro acertar o inimigo
-			for (size_t k = 0; k < enemies.size(); k++)
+			//Player
+			if (Keyboard::isKeyPressed(Keyboard::W))
 			{
-				if (player.bullets[i].shape.getGlobalBounds().intersects(enemies[k].shape.getGlobalBounds()))
+				player.shape.move(0.f, -5.f);
+			}
+			if (Keyboard::isKeyPressed(Keyboard::A))
+			{
+				player.shape.move(-5.f, 0.f);
+			}
+			if (Keyboard::isKeyPressed(Keyboard::S))
+			{
+				player.shape.move(0.f, 5.f);
+			}
+			if (Keyboard::isKeyPressed(Keyboard::D))
+			{
+				player.shape.move(5.f, 0.f);
+			}
+
+			// Colisão com a janela 
+			//nao funciona devido ao efeito paralaxe
+
+			/*
+			if (player.shape.getPosition().x <= 0) //esquerda
+				player.shape.setPosition(0.f, player.shape.getPosition().y);
+			if (player.shape.getPosition().x >= window.getSize().x - -player.shape.getGlobalBounds().width) //direita
+				player.shape.setPosition(window.getSize().x - player.shape.getGlobalBounds().width, player.shape.getPosition().y);
+			if (player.shape.getPosition().y <= 0) //cima
+				player.shape.setPosition(player.shape.getPosition().x, 0.f);
+			if (player.shape.getPosition().y >= window.getSize().y - player.shape.getGlobalBounds().height) //baixo
+				player.shape.setPosition(player.shape.getPosition().x, window.getSize().y - player.shape.getGlobalBounds().height);
+			*/
+
+			// Atirando
+			if (shootTimer < 20)
+			{
+				shootTimer++;
+			}
+			if (Keyboard::isKeyPressed(Keyboard::Space) && shootTimer >= 20)
+			{
+				bullet_sound.play();
+				player.bullets.push_back(Bullet(&bulletTex, player.shape.getPosition().x + 17.f, player.shape.getPosition().y - 17.f));
+				shootTimer = 0; //resetar cooldows bala
+			}
+
+			// Bullets
+			for (size_t i = 0; i < player.bullets.size(); i++)
+			{
+				player.bullets[i].shape.move(0.f + -50.f * dt.asSeconds(), -15.f + -50.f * dt.asSeconds());
+
+				// Se o tiro for pra fora da tela
+				if (player.bullets[i].shape.getPosition().y < tiroForaDaTela)
 				{
-					if (enemies[k].HP <= 1)
+					player.bullets.erase(player.bullets.begin() + i);
+					break;
+				}
+
+				//Se o tiro acertar o inimigo
+				for (size_t k = 0; k < enemies.size(); k++)
+				{
+					if (player.bullets[i].shape.getGlobalBounds().intersects(enemies[k].shape.getGlobalBounds()))
 					{
-						score += enemies[k].HPMax;
-						enemies.erase(enemies.begin() + k);
+						if (enemies[k].HP <= 1)
+						{
+							score += enemies[k].HPMax;
+							enemies.erase(enemies.begin() + k);
+						}
+						else
+						{
+							enemies[k].HP--; //Inimigo toma dano
+						}
+						player.bullets.erase(player.bullets.begin() + i);
+						break;
 					}
-					else
-					{
-						enemies[k].HP--; //Inimigo toma dano
-					}
-				player.bullets.erase(player.bullets.begin() + i);
-				break;
 				}
 			}
-		}
-		tiroForaDaTela--;
+			tiroForaDaTela--;
 
-		//Inimigos
-		
-		if (enemySpawnTimer <20)
-		{
-			enemySpawnTimer++;
-		}
-		if (enemySpawnTimer >= 20)
-		{
-			enemies.push_back(Meteoro(&enemyTex, window.getSize()));
-			enemySpawnTimer = 0; //respawn cooldown 
-		}
-		for (size_t i = 0; i < enemies.size(); i++)
-		{
-			//Movimentação dos inimigos
-			enemies[i].shape.move(0.f, 5.f);
+			//Inimigos
 
-			//Apaga inimigos fora da tela
-			if (enemies[i].shape.getPosition().y > meteoroForaDaTela)
+			if (enemySpawnTimer < 20)
 			{
-				enemies.erase(enemies.begin() + i);
+				enemySpawnTimer++;
 			}
-			// Colisão com inimigos
-			if (enemies[i].shape.getGlobalBounds().intersects(player.shape.getGlobalBounds()))
+			if (enemySpawnTimer >= 20)
 			{
-				enemies.erase(enemies.begin() + i);
-				player.HP--; //player leva dano
-				break;
+				enemies.push_back(Meteoro(&enemyTex, window.getSize()));
+				enemySpawnTimer = 0; //respawn cooldown 
 			}
-		}
-		meteoroForaDaTela -= dt.asSeconds() / 2;
+			for (size_t i = 0; i < enemies.size(); i++)
+			{
+				//Movimentação dos inimigos
+				enemies[i].shape.move(0.f, 5.f);
 
-		// Configurações da Visão 
-		
-		View.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds()); // just move the view here in any direction-the tiles will follow automatically
-		const Vector2f viewOffset(viewStart - View.getCenter());
-		Vector2f spriteOffset;
-		spriteOffset.x = floor(viewOffset.x / background_tex.getSize().x) * background_tex.getSize().x;
-		spriteOffset.y = floor(viewOffset.y / background_tex.getSize().y) * background_tex.getSize().y;
-		background.setPosition(spriteStart - spriteOffset);
-			
+				//Apaga inimigos fora da tela
+				if (enemies[i].shape.getPosition().y > meteoroForaDaTela)
+				{
+					enemies.erase(enemies.begin() + i);
+				}
+				// Colisão com inimigos
+				if (enemies[i].shape.getGlobalBounds().intersects(player.shape.getGlobalBounds()))
+				{
+					enemies.erase(enemies.begin() + i);
+					player.HP--; //player leva dano
+					break;
+				}
+			}
+			meteoroForaDaTela -= dt.asSeconds() / 2;
+
+			// Configurações da Visão 
+
+			View.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds()); // just move the view here in any direction-the tiles will follow automatically
+			const Vector2f viewOffset(viewStart - View.getCenter());
+			Vector2f spriteOffset;
+			spriteOffset.x = floor(viewOffset.x / background_tex.getSize().x) * background_tex.getSize().x;
+			spriteOffset.y = floor(viewOffset.y / background_tex.getSize().y) * background_tex.getSize().y;
+			background.setPosition(spriteStart - spriteOffset);
+		}
 		// Limpar a janela
+
 		window.clear(Color::Black);
 		window.setView(View);
 
@@ -299,6 +310,11 @@ int main()
 		for (size_t i = 0; i < enemies.size(); i++)
 		{
 			window.draw(enemies[i].shape);
+		}
+		if (player.HP <= 0)
+		{
+			window.draw(gameOverText);
+			music.stop();
 		}
 
 		// Terminar o Frame
