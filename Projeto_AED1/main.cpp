@@ -3,7 +3,7 @@
 int tiroForaDaTela = 0, meteoroForaDaTela = 700;
 float b = 0, xmin = 0, xmax = 800, ymin = 0, ymax = 600;
 int a1 = 0, a2 = 800;
-bool gameOver = false;
+float xinit = 384.f, yinit = 552.f;
 
 class Bullet
 {
@@ -167,6 +167,13 @@ int main()
 		Event evento;
 
 		Time dt = deltaClock.restart();
+
+		if (player.HP > 0)
+		{
+			xinit -= 50.f * dt.asSeconds();
+			yinit -= 50.f * dt.asSeconds();
+		}
+		
 
 		while (window.pollEvent(evento))
 		{
@@ -348,6 +355,14 @@ int main()
 			{
 				sound2.play();
 				player.HP--;
+			}
+			if (Keyboard::isKeyPressed(Keyboard::B))
+			{
+				enemies.clear();
+				player.HP = 1;
+				score = 0;
+				player.shape.setPosition(Vector2f(xinit, yinit));
+
 			}
 		}
 
