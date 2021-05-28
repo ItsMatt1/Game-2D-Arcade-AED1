@@ -1,6 +1,5 @@
 #include "Game.h"
 
-int tiroForaDaTela = 0, meteoroForaDaTela = 700;
 float b = 0, xmin = 0, xmax = 800, ymin = 0, ymax = 600;
 int a1 = 0, a2 = 800;
 float xinit = 384.f, yinit = 552.f;
@@ -56,8 +55,6 @@ public:
 		this->shape.setScale(1.5f, 1.5f);
 		srand(rand());
 		this->shape.setPosition(rand() % a2 + a1,b);
-		b -= 50.f;
-		a1 -= 17;
 	}
 
 	~Meteoro(){}
@@ -176,12 +173,6 @@ int main()
 
 		Time dt = deltaClock.restart();
 
-		if (player.HP > 0 && pause == false)
-		{
-			xinit -= 50.f * dt.asSeconds();
-			yinit -= 50.f * dt.asSeconds();
-		}
-
 		while (window.pollEvent(evento))
 		{
 			switch (evento.type)
@@ -195,6 +186,7 @@ int main()
 				if (evento.key.code == Keyboard::P)
 				{
 					pause = !pause;
+
 					if (pause == true)
 					{
 						music.stop();
@@ -209,18 +201,6 @@ int main()
 
 		if (player.HP > 0 && pause == false)
 		{
-			// correção do movimento involuntário da nave/score/gameover
-			player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-			scoreText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-			gameOverText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-			pauseText.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-
-			//Correção do movimento involuntario do asteroide e adicionando rotação
-			for (size_t i = 0; i < enemies.size(); i++)
-			{
-				enemies[i].shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-				enemies[i].shape.rotate(200.f * dt.asSeconds());
-			}
 
 			//Player
 			if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up))
@@ -241,11 +221,6 @@ int main()
 			}
 
 			// Colisão com a janela 
-
-			xmin -= 50.f * dt.asSeconds();
-			xmax -= 50.f * dt.asSeconds();
-			ymin -= 50.f * dt.asSeconds();
-			ymax -= 50.f * dt.asSeconds();
 			
 			if (player.shape.getPosition().x <= xmin)
 			{
@@ -279,10 +254,10 @@ int main()
 			// Bullets
 			for (size_t i = 0; i < player.bullets.size(); i++)
 			{
-				player.bullets[i].shape.move(0.f + -50.f * dt.asSeconds(), -15.f + -50.f * dt.asSeconds());
+				player.bullets[i].shape.move(0.f, -15.f );
 
 				// Se o tiro for pra fora da tela
-				if (player.bullets[i].shape.getPosition().y < tiroForaDaTela)
+				if (player.bullets[i].shape.getPosition().y < 0)
 				{
 					player.bullets.erase(player.bullets.begin() + i);
 					break;
@@ -307,7 +282,6 @@ int main()
 					}
 				}
 			}
-			tiroForaDaTela--;
 
 			//Inimigos
 
@@ -324,9 +298,11 @@ int main()
 			{
 				//Movimentação dos inimigos
 				enemies[i].shape.move(0.f, 5.f);
+				enemies[i].shape.rotate(200.f * dt.asSeconds());
+
 
 				//Apaga inimigos fora da tela
-				if (enemies[i].shape.getPosition().y > meteoroForaDaTela)
+				if (enemies[i].shape.getPosition().y > 700)
 				{
 					enemies.erase(enemies.begin() + i);
 				}
@@ -338,7 +314,6 @@ int main()
 					break;
 				}
 			}
-			meteoroForaDaTela -= dt.asSeconds() / 2;
 
 			// Configurações da Visão 
 
@@ -355,7 +330,6 @@ int main()
 		window.setView(View);
         window.draw(background);
         window.setView(window.getDefaultView());
-		window.setView(View);
 
 		// Desenhar
 		window.draw(background);
