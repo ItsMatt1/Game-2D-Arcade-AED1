@@ -4,6 +4,7 @@ int tiroForaDaTela = 0, meteoroForaDaTela = 700;
 float b = 0, xmin = 0, xmax = 800, ymin = 0, ymax = 600;
 int a1 = 0, a2 = 800;
 float xinit = 384.f, yinit = 552.f;
+bool pause;
 
 class Bullet
 {
@@ -69,6 +70,13 @@ int main()
 	RenderWindow window(VideoMode(800, 600), "Meteoro", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
 
+	//Colocando icone na janela
+	Image windowIcon = Image{};
+	if (windowIcon.loadFromFile("Assets/Asteroid.png"))
+	{
+		window.setIcon(windowIcon.getSize().x, windowIcon.getSize().y, windowIcon.getPixelsPtr());
+	}
+
 	Clock deltaClock;
 	Font font;
 	font.loadFromFile("Assets/upheavtt.ttf");
@@ -104,17 +112,17 @@ int main()
 	pauseText.setFont(font);
 	pauseText.setCharacterSize(40);
 	pauseText.setFillColor(Color::Yellow);
-	pauseText.setPosition(290.f, 0.f);
+	pauseText.setPosition(320.f, 0.f);
 	pauseText.setString("PAUSED");
 
 	// Iniciando jogador
-	int score = 0;
 	Nave player(&playerTex);
+	int score = 0;
 	int shootTimer = 20;
 
 	//Iniciando inimigo
-	int enemySpawnTimer = 0;
 	vector<Meteoro> enemies;
+	int enemySpawnTimer = 0;
 
 	// Visão do mapa
 	View View(window.getDefaultView());
@@ -135,7 +143,7 @@ int main()
 	{
 		return -1; 
 	}
-
+	music.setVolume(30.f);
 	music.play();
 	music.setLoop(true);	
 
@@ -148,7 +156,7 @@ int main()
 
 	Sound bullet_sound;
 	bullet_sound.setBuffer(buffer);
-	bullet_sound.setVolume(30.f);
+	bullet_sound.setVolume(20.f);
 
 	// Som game over
 	SoundBuffer buffer2;
@@ -159,7 +167,7 @@ int main()
 
 	Sound sound2;
 	sound2.setBuffer(buffer2);
-	sound2.setVolume(40.f);
+	sound2.setVolume(20.f);
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
@@ -168,12 +176,11 @@ int main()
 
 		Time dt = deltaClock.restart();
 
-		if (player.HP > 0)
+		if (player.HP > 0 && pause == false)
 		{
 			xinit -= 50.f * dt.asSeconds();
 			yinit -= 50.f * dt.asSeconds();
 		}
-		
 
 		while (window.pollEvent(evento))
 		{
@@ -184,9 +191,23 @@ int main()
 					window.close();
 					break;
 				}
+			case Event::KeyReleased:
+				if (evento.key.code == Keyboard::P)
+				{
+					pause = !pause;
+					if (pause == true)
+					{
+						music.stop();
+					}
+					else
+					{
+						music.play();
+					}
+				}
 			}
 		}
-		if (player.HP > 0)
+
+		if (player.HP > 0 && pause == false)
 		{
 			// correção do movimento involuntário da nave/score/gameover
 			player.shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
@@ -198,7 +219,7 @@ int main()
 			for (size_t i = 0; i < enemies.size(); i++)
 			{
 				enemies[i].shape.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds());
-				enemies[i].shape.rotate(2.f);
+				enemies[i].shape.rotate(200.f * dt.asSeconds());
 			}
 
 			//Player
@@ -332,6 +353,9 @@ int main()
 		// Limpar a janela
 		window.clear(Color::Black);
 		window.setView(View);
+        window.draw(background);
+        window.setView(window.getDefaultView());
+		window.setView(View);
 
 		// Desenhar
 		window.draw(background);
@@ -355,16 +379,21 @@ int main()
 			{
 				sound2.play();
 				player.HP--;
-				//this_thread::sleep_for(chrono::nanoseconds(4));
 			}
 			if (Keyboard::isKeyPressed(Keyboard::B))
 			{
+
 				enemies.clear();
 				player.HP = 1;
 				score = 0;
 				player.shape.setPosition(Vector2f(xinit, yinit));
 				music.play();
+				enemySpawnTimer = 0;
 			}
+		}
+		if (pause == true)
+		{
+			window.draw(pauseText);
 		}
 
 		// Terminar o Frame
