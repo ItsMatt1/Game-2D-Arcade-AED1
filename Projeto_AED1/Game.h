@@ -13,21 +13,3 @@ using namespace std;
 #include <SFML/Audio.hpp>
 
 using namespace sf;
-
-/*
-	Classe empacotadora que age como a Game Engine
-*/
-class Game
-{
-	
-
-
-private:
-
-
-
-public:
-
-
-
-};
