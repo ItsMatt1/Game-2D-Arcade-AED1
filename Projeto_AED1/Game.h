@@ -5,6 +5,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <math.h>
+#include <thread>
+#include <chrono>
 using namespace std;
 
 #include <SFML/Graphics.hpp>

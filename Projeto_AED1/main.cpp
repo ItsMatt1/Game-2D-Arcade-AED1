@@ -355,6 +355,7 @@ int main()
 			{
 				sound2.play();
 				player.HP--;
+				//this_thread::sleep_for(chrono::nanoseconds(4));
 			}
 			if (Keyboard::isKeyPressed(Keyboard::B))
 			{
@@ -362,7 +363,7 @@ int main()
 				player.HP = 1;
 				score = 0;
 				player.shape.setPosition(Vector2f(xinit, yinit));
-
+				music.play();
 			}
 		}
 
