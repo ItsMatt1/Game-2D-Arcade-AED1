@@ -1,64 +1,8 @@
 #include "Game.h"
 
-float b = 0, xmin = 0, xmax = 800, ymin = 0, ymax = 600;
-int a1 = 0, a2 = 800;
+float  xmin = 0, xmax = 800, ymin = 0, ymax = 600;
 float xinit = 384.f, yinit = 552.f;
 bool pause;
-
-class Bullet
-{
-public:
-	Sprite shape;
-
-	Bullet(Texture *texture, float posx, float posy)
-	{
-		this->shape.setTexture(*texture);
-		this->shape.setScale(2.0f, 2.0f);
-		this->shape.setPosition(posx, posy);
-	}
-};
-
-class Nave
-{
-public:
-	int HP;
-	Sprite shape;
-	Texture *texture;
-	vector<Bullet> bullets;
-
-	Nave(Texture* texture)
-	{
-		this->HP = 1;
-		this->texture = texture;
-		this->shape.setTexture(*texture);
-
-		this->shape.setScale(1.5f, 1.5f);
-		this->shape.setPosition(Vector2f(384.f, 552.f));
-	}
-};
-
-class Meteoro
-{
-public:
-	Sprite shape;
-
-	int HP;
-	int HPMax;
-
-	Meteoro(Texture* texture, Vector2u windowSize)
-	{
-		this->HPMax = rand () % 3 + 1; // ANTES
-		this->HP = this->HPMax;
-
-		this->shape.setOrigin(24.f, 24.f);
-		this->shape.setTexture(*texture);
-		this->shape.setScale(1.5f, 1.5f);
-		srand(rand());
-		this->shape.setPosition(rand() % a2 + a1,b);
-	}
-
-	~Meteoro(){}
-};
 
 // Principal
 int main()
@@ -332,7 +276,6 @@ int main()
         window.setView(window.getDefaultView());
 
 		// Desenhar
-		window.draw(background);
 		window.draw(player.shape);
 		for (size_t i = 0; i < player.bullets.size(); i++)
 		{
@@ -354,9 +297,8 @@ int main()
 				sound2.play();
 				player.HP--;
 			}
-			if (Keyboard::isKeyPressed(Keyboard::B))
+			if (Keyboard::isKeyPressed(Keyboard::B) && sound2.getStatus() == SoundSource::Status::Stopped)
 			{
-
 				enemies.clear();
 				player.HP = 1;
 				score = 0;
@@ -365,9 +307,12 @@ int main()
 				enemySpawnTimer = 0;
 			}
 		}
-		if (pause == true)
+		else
 		{
-			window.draw(pauseText);
+			if (pause == true)
+			{
+				window.draw(pauseText);
+			}
 		}
 
 		// Terminar o Frame

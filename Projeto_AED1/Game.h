@@ -15,3 +15,31 @@ using namespace std;
 #include <SFML/Audio.hpp>
 
 using namespace sf;
+
+class Bullet
+{
+public:
+	Sprite shape;
+
+	Bullet(Texture* texture, float posx, float posy);
+};
+class Nave
+{
+public:
+	int HP;
+	Sprite shape;
+	Texture* texture;
+	vector<Bullet> bullets;
+
+	Nave(Texture* texture);
+};
+class Meteoro
+{
+public:
+	Sprite shape;
+
+	int HP;
+	int HPMax;
+
+	Meteoro(Texture* texture, Vector2u windowSize);
+};
