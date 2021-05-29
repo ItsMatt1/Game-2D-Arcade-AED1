@@ -145,7 +145,6 @@ int main()
 
 		if (player.HP > 0 && pause == false)
 		{
-
 			//Player
 			if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up))
 			{
@@ -228,7 +227,6 @@ int main()
 			}
 
 			//Inimigos
-
 			if (enemySpawnTimer < 20)
 			{
 				enemySpawnTimer++;
@@ -243,7 +241,6 @@ int main()
 				//Movimentação dos inimigos
 				enemies[i].shape.move(0.f, 5.f);
 				enemies[i].shape.rotate(200.f * dt.asSeconds());
-
 
 				//Apaga inimigos fora da tela
 				if (enemies[i].shape.getPosition().y > 700)
@@ -260,7 +257,6 @@ int main()
 			}
 
 			// Configurações da Visão 
-
 			View.move(-50.f * dt.asSeconds(), -50.f * dt.asSeconds()); // just move the view here in any direction-the tiles will follow automatically
 			const Vector2f viewOffset(viewStart - View.getCenter());
 			Vector2f spriteOffset;
@@ -297,7 +293,7 @@ int main()
 				sound2.play();
 				player.HP--;
 			}
-			if (Keyboard::isKeyPressed(Keyboard::B) && sound2.getStatus() == SoundSource::Status::Stopped)
+			if (Keyboard::isKeyPressed(Keyboard::R) && sound2.getStatus() == SoundSource::Status::Stopped)
 			{
 				enemies.clear();
 				player.HP = 1;
