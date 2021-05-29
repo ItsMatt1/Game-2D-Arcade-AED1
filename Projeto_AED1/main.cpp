@@ -7,7 +7,7 @@ bool pause;
 // Principal
 int main()
 {
-	// Janela
+	//Janela
 	RenderWindow window(VideoMode(800, 600), "Meteoro", Style::Titlebar | Style::Close);
 	window.setFramerateLimit(60);
 
@@ -22,7 +22,7 @@ int main()
 	Font font;
 	font.loadFromFile("Assets/upheavtt.ttf");
 	
-	// Iniciando texturas
+	//Iniciando texturas
 	Texture playerTex;
 	playerTex.loadFromFile("Assets/Spaceship.png");
 
@@ -56,7 +56,7 @@ int main()
 	pauseText.setPosition(320.f, 0.f);
 	pauseText.setString("PAUSED");
 
-	// Iniciando jogador
+	//Iniciando jogador
 	Nave player(&playerTex);
 	int score = 0;
 	int shootTimer = 20;
@@ -65,22 +65,22 @@ int main()
 	vector<Meteoro> enemies;
 	int enemySpawnTimer = 0;
 
-	// Visão do mapa
+	//Visão do mapa
 	View View(window.getDefaultView());
 	FloatRect fBounds(0.f, 0.f, 3200.f, 2400.f);
 	IntRect	iBounds(fBounds);
 	background_tex.setRepeated(true);
 
-	// Sprite do Background
+	//Sprite do Background
 	Sprite background(background_tex, iBounds);
 
-	// Limites da Visão
+	//Limites da Visão
 	const Vector2f viewStart(fBounds.left + (fBounds.width / 2), fBounds.top + (fBounds.height / 2));
 	const Vector2f spriteStart(fBounds.left, fBounds.top);
 
-	// Musica
+	//Musica
 	Music music;
-	if (!music.openFromFile("OST/LOL.ogg"))
+	if (!music.openFromFile("OST/Sidereal Chaos.ogg"))
 	{
 		return -1; 
 	}
@@ -88,9 +88,9 @@ int main()
 	music.play();
 	music.setLoop(true);	
 
-	// Som
+	//Som
 	SoundBuffer buffer;
-	if (!buffer.loadFromFile("OST/Bullet2.wav"))
+	if (!buffer.loadFromFile("OST/Bullet.wav"))
 	{
 		return -1;
 	}
@@ -99,7 +99,7 @@ int main()
 	bullet_sound.setBuffer(buffer);
 	bullet_sound.setVolume(20.f);
 
-	// Som game over
+	//Som Game over
 	SoundBuffer buffer2;
 	if (!buffer2.loadFromFile("OST/GameOver.wav"))
 	{
