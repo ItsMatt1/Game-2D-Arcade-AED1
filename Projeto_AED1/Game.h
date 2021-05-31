@@ -16,6 +16,8 @@ using namespace std;
 
 using namespace sf;
 
+#define itens 3
+
 class Bullet
 {
 public:
@@ -42,4 +44,22 @@ public:
 	int HPMax;
 
 	Meteoro(Texture* texture, Vector2u windowSize);
+};
+
+class Menu
+{
+public:
+	Menu(float x, float y);
+	~Menu();
+
+	void draw(RenderWindow& window);
+	void MoveUp();
+	void MoveDown();
+
+	int getPressedItem() { return selectedItem; }
+
+private:
+	int selectedItem;
+	Font font;
+	Text menu[itens];
 };

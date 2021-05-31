@@ -2,7 +2,7 @@
 
 float  xmin = 0, xmax = 800, ymin = 0, ymax = 600;
 float xinit = 384.f, yinit = 552.f;
-bool pause;
+bool pause, play = false, options = false, menuscrn = true;
 
 // Principal
 int main()
@@ -18,10 +18,14 @@ int main()
 		window.setIcon(windowIcon.getSize().x, windowIcon.getSize().y, windowIcon.getPixelsPtr());
 	}
 
+	//Menu 
+
+	Menu menu(window.getSize().x, window.getSize().y);
+
 	Clock deltaClock;
 	Font font;
 	font.loadFromFile("Assets/upheavtt.ttf");
-	
+
 	//Iniciando texturas
 	Texture playerTex;
 	playerTex.loadFromFile("Assets/Spaceship.png");
@@ -42,6 +46,7 @@ int main()
 	scoreText.setFillColor(Color::White);
 	scoreText.setPosition(7.f, 7.f);
 
+	// Text Game over
 	Text gameOverText;
 	gameOverText.setFont(font);
 	gameOverText.setCharacterSize(40);
@@ -49,12 +54,34 @@ int main()
 	gameOverText.setPosition(290.f, 0.f);
 	gameOverText.setString("GAME OVER!");
 
+	// Text Pause
 	Text pauseText;
 	pauseText.setFont(font);
 	pauseText.setCharacterSize(40);
 	pauseText.setFillColor(Color::Yellow);
 	pauseText.setPosition(320.f, 0.f);
 	pauseText.setString("PAUSED");
+
+	Text controlsR;
+	controlsR.setFont(font);
+	controlsR.setCharacterSize(35);
+	controlsR.setFillColor(Color::Yellow);
+	controlsR.setPosition(320.f, 100.f);
+	controlsR.setString("R = RESTART");
+
+	Text controlsSpace;
+	controlsSpace.setFont(font);
+	controlsSpace.setCharacterSize(35);
+	controlsSpace.setFillColor(Color::Yellow);
+	controlsSpace.setPosition(320.f, 200.f);
+	controlsSpace.setString("SPACEBAR = SHOOT");
+
+	Text back;
+	back.setFont(font);
+	back.setCharacterSize(35);
+	back.setFillColor(Color::Red);
+	back.setPosition(360.f, 450.f);
+	back.setString("BACK");
 
 	//Iniciando jogador
 	Nave player(&playerTex);
@@ -82,11 +109,15 @@ int main()
 	Music music;
 	if (!music.openFromFile("OST/Sidereal Chaos.ogg"))
 	{
-		return -1; 
+		return -1;
 	}
 	music.setVolume(30.f);
-	music.play();
-	music.setLoop(true);	
+
+	if (play == true)
+	{
+		music.play();
+		music.setLoop(true);
+	}
 
 	//Som
 	SoundBuffer buffer;
@@ -117,33 +148,84 @@ int main()
 
 		Time dt = deltaClock.restart();
 
+		//pollEvent
+
 		while (window.pollEvent(evento))
 		{
 			switch (evento.type)
 			{
-			case Event::Closed:
-				{
-					window.close();
-					break;
-				}
-			case Event::KeyReleased:
-				if (evento.key.code == Keyboard::P)
-				{
-					pause = !pause;
 
-					if (pause == true)
+				//Clicar no 'X'
+
+			case Event::Closed:
+			{
+				window.close();
+				break;
+			}
+
+			//Soltar essas teclas
+
+			case Event::KeyReleased:
+
+				if (options == true)
+				{
+					if (evento.key.code == Keyboard::Return)
 					{
-						music.stop();
+						options = false;
+						menuscrn = true;
 					}
-					else
+				}
+
+				else if (menuscrn == true)
+				{
+					switch (evento.key.code)
 					{
-						music.play();
+					case Keyboard::Up:
+						menu.MoveUp();
+						break;
+					case Keyboard::Down:
+						menu.MoveDown();
+						break;
+
+					case Keyboard::Return:
+						switch (menu.getPressedItem())
+						{
+						case 0:
+							cout << "Play";
+							music.play();
+							menuscrn = false;
+							play = true;
+							break;
+						case 1:
+							cout << "Options";
+							options = true;
+							menuscrn = false;
+							break;
+						case 2:
+							window.close();
+							break;
+						}
 					}
+				}
+
+			if (evento.key.code == Keyboard::P)
+			{
+				pause = !pause;
+
+				if (pause == true)
+				{
+					music.pause();
+				}
+				else
+				{
+					music.play();
 				}
 			}
-		}
 
-		if (player.HP > 0 && pause == false)
+			}
+		} 
+
+		if (player.HP > 0 && pause == false && play == true)
 		{
 			//Player
 			if (Keyboard::isKeyPressed(Keyboard::W) || Keyboard::isKeyPressed(Keyboard::Up))
@@ -164,7 +246,7 @@ int main()
 			}
 
 			// Colisão com a janela 
-			
+
 			if (player.shape.getPosition().x <= xmin)
 			{
 				player.shape.setPosition(xmin + (1), player.shape.getPosition().y);
@@ -197,7 +279,7 @@ int main()
 			// Bullets
 			for (size_t i = 0; i < player.bullets.size(); i++)
 			{
-				player.bullets[i].shape.move(0.f, -15.f );
+				player.bullets[i].shape.move(0.f, -15.f);
 
 				// Se o tiro for pra fora da tela
 				if (player.bullets[i].shape.getPosition().y < 0)
@@ -267,12 +349,28 @@ int main()
 
 		// Limpar a janela
 		window.clear(Color::Black);
+
+
+
 		window.setView(View);
-        window.draw(background);
-        window.setView(window.getDefaultView());
+		window.draw(background);
+		window.setView(window.getDefaultView());
 
 		// Desenhar
+		if (options == true)
+		{
+			window.draw(controlsR);
+			window.draw(controlsSpace);
+			window.draw(back);
+		}
+
+		if (menuscrn == true)
+		{		
+			menu.draw(window);
+		}
+
 		window.draw(player.shape);
+
 		for (size_t i = 0; i < player.bullets.size(); i++)
 		{
 			window.draw(player.bullets[i].shape);
@@ -281,8 +379,14 @@ int main()
 		{
 			window.draw(enemies[i].shape);
 		}
+
 		scoreText.setString("Score: " + to_string(score));
-		window.draw(scoreText);
+
+		if (play == true)
+		{
+			window.draw(scoreText);
+		}
+
 		if (player.HP <= 0)
 		{
 			window.draw(gameOverText);
