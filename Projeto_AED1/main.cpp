@@ -83,6 +83,13 @@ int main()
 	back.setPosition(360.f, 450.f);
 	back.setString("BACK");
 
+	Text pressR;
+	pressR.setFont(font);
+	pressR.setCharacterSize(35);
+	pressR.setFillColor(Color::Yellow);
+	pressR.setPosition(220.f, 490.f);
+	pressR.setString("PRESS 'R' TO RESTART");
+
 	//Iniciando jogador
 	Nave player(&playerTex);
 	int score = 0;
@@ -391,6 +398,7 @@ int main()
 		{
 			window.draw(gameOverText);
 			music.stop();
+			window.draw(pressR);
 
 			if (player.HP == 0)
 			{
