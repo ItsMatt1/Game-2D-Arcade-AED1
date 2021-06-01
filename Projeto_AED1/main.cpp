@@ -62,12 +62,16 @@ int main()
 	pauseText.setPosition(320.f, 0.f);
 	pauseText.setString("PAUSED");
 
+	//Texto Controle R
+
 	Text controlsR;
 	controlsR.setFont(font);
 	controlsR.setCharacterSize(35);
 	controlsR.setFillColor(Color::Yellow);
 	controlsR.setPosition(320.f, 100.f);
 	controlsR.setString("R = RESTART");
+
+	//Texto Controles Espaço
 
 	Text controlsSpace;
 	controlsSpace.setFont(font);
@@ -76,12 +80,16 @@ int main()
 	controlsSpace.setPosition(320.f, 200.f);
 	controlsSpace.setString("SPACEBAR = SHOOT");
 
+	//Texto Back
+
 	Text back;
 	back.setFont(font);
 	back.setCharacterSize(35);
 	back.setFillColor(Color::Red);
 	back.setPosition(360.f, 450.f);
 	back.setString("BACK");
+
+	//Texto Press R
 
 	Text pressR;
 	pressR.setFont(font);
