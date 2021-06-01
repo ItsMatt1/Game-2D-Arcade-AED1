@@ -131,8 +131,9 @@ int main()
 	if (play == true)
 	{
 		music.play();
-		music.setLoop(true);
 	}
+
+	music.setLoop(true);
 
 	//Som
 	SoundBuffer buffer;
@@ -154,7 +155,7 @@ int main()
 
 	Sound sound2;
 	sound2.setBuffer(buffer2);
-	sound2.setVolume(20.f);
+	sound2.setVolume(15.f);
 
 	// Enquanto Janela está aberta
 	while (window.isOpen())
