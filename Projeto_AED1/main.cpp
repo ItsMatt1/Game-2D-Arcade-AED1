@@ -180,7 +180,7 @@ int main()
 
 				if (options == true)
 				{
-					if (evento.key.code == Keyboard::Return)
+					if (evento.key.code == Keyboard::Return || Keyboard::Key::Space)
 					{
 						options = false;
 						menuscrn = true;
@@ -194,11 +194,32 @@ int main()
 					case Keyboard::Up:
 						menu.MoveUp();
 						break;
+					case Keyboard::W:
+						menu.MoveUp();
+						break;
 					case Keyboard::Down:
 						menu.MoveDown();
 						break;
-
+					case Keyboard::S:
+						menu.MoveDown();
+						break;
 					case Keyboard::Return:
+						switch (menu.getPressedItem())
+						{
+						case 0:
+							music.play();
+							menuscrn = false;
+							play = true;
+							break;
+						case 1:
+							options = true;
+							menuscrn = false;
+							break;
+						case 2:
+							window.close();
+							break;
+						}
+					case Keyboard::Space:
 						switch (menu.getPressedItem())
 						{
 						case 0:
