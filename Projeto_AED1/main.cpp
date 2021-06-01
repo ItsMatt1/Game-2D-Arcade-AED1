@@ -68,7 +68,7 @@ int main()
 	controlsR.setFont(font);
 	controlsR.setCharacterSize(35);
 	controlsR.setFillColor(Color::Yellow);
-	controlsR.setPosition(320.f, 100.f);
+	controlsR.setPosition(320.f, 300.f);
 	controlsR.setString("R = RESTART");
 
 	//Texto Controles Espaço
@@ -77,7 +77,7 @@ int main()
 	controlsSpace.setFont(font);
 	controlsSpace.setCharacterSize(35);
 	controlsSpace.setFillColor(Color::Yellow);
-	controlsSpace.setPosition(320.f, 200.f);
+	controlsSpace.setPosition(320.f, 100.f);
 	controlsSpace.setString("SPACEBAR = SHOOT");
 
 	//Texto Back
@@ -97,6 +97,13 @@ int main()
 	pressR.setFillColor(Color::Yellow);
 	pressR.setPosition(220.f, 490.f);
 	pressR.setString("PRESS 'R' TO RESTART");
+
+	Text pressP;
+	pressP.setFont(font);
+	pressP.setCharacterSize(35);
+	pressP.setFillColor(Color::Yellow);
+	pressP.setPosition(320.f, 200.f);
+	pressP.setString("P = PAUSE");
 
 	//Iniciando jogador
 	Nave player(&playerTex);
@@ -181,7 +188,7 @@ int main()
 
 				if (options == true)
 				{
-					if (evento.key.code == Keyboard::Return || Keyboard::Key::Space)
+					if (evento.key.code == Keyboard::Return || evento.key.code == Keyboard::Space)
 					{
 						options = false;
 						menuscrn = true;
@@ -239,19 +246,19 @@ int main()
 					}
 				}
 
-			if (evento.key.code == Keyboard::P && menuscrn == false && options == false)
-			{
-				pause = !pause;
+				if (evento.key.code == Keyboard::P && menuscrn == false && options == false)
+				{
+					pause = !pause;
 
-				if (pause == true)
-				{
-					music.pause();
+					if (pause == true)
+					{
+						music.pause();
+					}
+					else
+					{
+						music.play();
+					}
 				}
-				else
-				{
-					music.play();
-				}
-			}
 
 			}
 		} 
@@ -393,6 +400,7 @@ int main()
 			window.draw(controlsR);
 			window.draw(controlsSpace);
 			window.draw(back);
+			window.draw(pressP);
 		}
 
 		if (menuscrn == true)
