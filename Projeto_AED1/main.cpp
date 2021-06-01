@@ -169,17 +169,13 @@ int main()
 		{
 			switch (evento.type)
 			{
-
 				//Clicar no 'X'
-
 			case Event::Closed:
 			{
 				window.close();
 				break;
 			}
-
 			//Soltar essas teclas
-
 			case Event::KeyReleased:
 
 				if (options == true)
@@ -206,13 +202,11 @@ int main()
 						switch (menu.getPressedItem())
 						{
 						case 0:
-							cout << "Play";
 							music.play();
 							menuscrn = false;
 							play = true;
 							break;
 						case 1:
-							cout << "Options";
 							options = true;
 							menuscrn = false;
 							break;
@@ -223,7 +217,7 @@ int main()
 					}
 				}
 
-			if (evento.key.code == Keyboard::P)
+			if (evento.key.code == Keyboard::P && menuscrn == false && options == false)
 			{
 				pause = !pause;
 

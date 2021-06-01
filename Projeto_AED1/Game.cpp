@@ -41,17 +41,17 @@ Menu::Menu(float x, float y)
 	menu[0].setFont(font);
 	menu[0].setFillColor(Color::Red);
 	menu[0].setString("Play");
-	menu[0].setPosition(Vector2f((x / 2) - 37, y / (itens + 1) * 1));
+	menu[0].setPosition(Vector2f((x / 2) - 37, 125));
 
 	menu[1].setFont(font);
 	menu[1].setFillColor(Color::White);
 	menu[1].setString("Controls");
-	menu[1].setPosition(Vector2f((x / 2) - 74, y / (itens + 1) * 2));
+	menu[1].setPosition(Vector2f((x / 2) - 74, 250));
 
 	menu[2].setFont(font);
 	menu[2].setFillColor(Color::White);
 	menu[2].setString("Exit");
-	menu[2].setPosition(Vector2f((x / 2) - 38, y / (itens + 1) * 3));
+	menu[2].setPosition(Vector2f((x / 2) - 38, 375));
 
 	selectedItem = 0;
 }
